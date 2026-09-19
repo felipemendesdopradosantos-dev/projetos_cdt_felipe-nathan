@@ -4,7 +4,7 @@ Sistema automatizado de gerenciamento de academia desenvolvido como projeto fina
 
 ## Versão
 
-0.1.0
+0.3.0
 
 ## Objetivo
 
