@@ -1,3 +1,4 @@
+import msvcrt
 from datetime import date, datetime
 
 from app.models.aluno import Aluno
@@ -49,6 +50,13 @@ from app.services.plano_service import (
     listar_planos,
 )
 
+from app.services.relatorio_service import (
+    relatorio_acessos,
+    relatorio_financeiro,
+    relatorio_geral,
+    relatorio_planos,
+)
+
 from app.services.treino_service import (
     adicionar_exercicio_ao_treino,
     buscar_treino_por_id,
@@ -56,6 +64,52 @@ from app.services.treino_service import (
     listar_exercicios_do_treino,
     listar_treinos_por_aluno,
 )
+
+from app.services.usuario_service import (
+    USUARIO_ROOT,
+    autenticar_usuario,
+)
+
+
+def ler_senha_mascarada(mensagem="Senha: ") -> str:
+    print(mensagem, end="", flush=True)
+
+    caracteres = []
+
+    while True:
+        tecla = msvcrt.getwch()
+
+        if tecla in ("\r", "\n"):
+            print()
+            break
+
+        if tecla == "\003":
+            raise KeyboardInterrupt
+
+        if tecla == "\b":
+            if caracteres:
+                caracteres.pop()
+                print(
+                    "\b \b",
+                    end="",
+                    flush=True,
+                )
+
+            continue
+
+        if tecla in ("\x00", "\xe0"):
+            msvcrt.getwch()
+            continue
+
+        caracteres.append(tecla)
+
+        print(
+            "*",
+            end="",
+            flush=True,
+        )
+
+    return "".join(caracteres)
 
 
 def converter_data(data_texto: str) -> date:
@@ -108,6 +162,7 @@ def exibir_menu():
 
     print("18 - Exportar banco para JSON")
     print("19 - Gerar dados fictícios com Faker")
+    print("20 - Relatórios")
 
     print("0 - Sair")
 
@@ -477,26 +532,19 @@ def registrar_novo_pagamento():
         print(
             "Pagamento registrado com sucesso!"
         )
-
-        print(
-            f"ID: {pagamento.id}"
-        )
-
+        print(f"ID: {pagamento.id}")
         print(
             f"Valor: R$ "
             f"{pagamento.valor:.2f}"
         )
-
         print(
             "Data do pagamento: "
             f"{pagamento.data_pagamento.strftime('%d/%m/%Y')}"
         )
-
         print(
             f"Forma: "
             f"{pagamento.forma_pagamento}"
         )
-
         print(
             f"Status: "
             f"{pagamento.status}"
@@ -881,20 +929,16 @@ def visualizar_ficha_treino():
     )
 
     print()
-
     print(
         f"Aluno: "
         f"{aluno.nome if aluno else 'Não encontrado'}"
     )
-
     print(
         f"Treino: {treino.nome}"
     )
-
     print(
         f"Objetivo: {treino.objetivo}"
     )
-
     print(
         "Data de criação: "
         f"{treino.data_criacao.strftime('%d/%m/%Y')}"
@@ -944,6 +988,37 @@ def visualizar_ficha_treino():
 def exportar_dados_json():
     print()
     print("--- Exportação para JSON ---")
+    print("Acesso restrito ao usuário root master.")
+    print()
+
+    nome_usuario = input(
+        "Usuário: "
+    ).strip()
+
+    senha = ler_senha_mascarada(
+        "Senha: "
+    )
+
+    usuario = autenticar_usuario(
+        nome_usuario,
+        senha,
+    )
+
+    if (
+        usuario is None
+        or usuario.usuario != USUARIO_ROOT
+    ):
+        print()
+        print("ACESSO NEGADO")
+        print(
+            "Usuário ou senha inválidos."
+        )
+        return
+
+    print()
+    print(
+        "Autenticação realizada com sucesso."
+    )
 
     try:
         caminho_arquivo = exportar_banco_json()
@@ -1033,6 +1108,184 @@ def gerar_dados_ficticios():
         )
 
 
+def mostrar_relatorio_geral():
+    dados = relatorio_geral()
+
+    print()
+    print("=" * 45)
+    print("RELATÓRIO GERAL")
+    print("=" * 45)
+
+    print(
+        f"Total de alunos: "
+        f"{dados['total_alunos']}"
+    )
+
+    print(
+        f"Alunos ativos: "
+        f"{dados['alunos_ativos']}"
+    )
+
+    print(
+        f"Assinaturas ativas: "
+        f"{dados['assinaturas_ativas']}"
+    )
+
+    print(
+        f"Planos ativos: "
+        f"{dados['planos_ativos']}"
+    )
+
+
+def mostrar_relatorio_financeiro():
+    dados = relatorio_financeiro()
+
+    print()
+    print("=" * 45)
+    print("RELATÓRIO FINANCEIRO")
+    print("=" * 45)
+
+    print(
+        f"Total recebido: "
+        f"R$ {dados['total_recebido']:.2f}"
+    )
+
+    print(
+        f"Total pendente: "
+        f"R$ {dados['total_pendente']:.2f}"
+    )
+
+    print(
+        f"Total em atraso: "
+        f"R$ {dados['total_atrasado']:.2f}"
+    )
+
+    print()
+
+    print(
+        f"Pagamentos realizados: "
+        f"{dados['quantidade_pagos']}"
+    )
+
+    print(
+        f"Pagamentos pendentes: "
+        f"{dados['quantidade_pendentes']}"
+    )
+
+    print(
+        f"Pagamentos atrasados: "
+        f"{dados['quantidade_atrasados']}"
+    )
+
+
+def mostrar_relatorio_acessos():
+    dados = relatorio_acessos()
+
+    print()
+    print("=" * 45)
+    print("RELATÓRIO DE ACESSOS")
+    print("=" * 45)
+
+    print(
+        f"Total de acessos: "
+        f"{dados['total_acessos']}"
+    )
+
+    print(
+        f"Acessos autorizados: "
+        f"{dados['autorizados']}"
+    )
+
+    print(
+        f"Acessos negados: "
+        f"{dados['negados']}"
+    )
+
+    print()
+    print("--- Ranking de Frequência ---")
+
+    if not dados["ranking_alunos"]:
+        print(
+            "Nenhum acesso registrado."
+        )
+        return
+
+    for posicao, aluno in enumerate(
+        dados["ranking_alunos"],
+        start=1,
+    ):
+        print(
+            f"{posicao}º - "
+            f"{aluno['nome']} | "
+            f"{aluno['quantidade']} acesso(s)"
+        )
+
+
+def mostrar_relatorio_planos():
+    planos = relatorio_planos()
+
+    print()
+    print("=" * 45)
+    print("RELATÓRIO DE PLANOS")
+    print("=" * 45)
+
+    if not planos:
+        print(
+            "Nenhum plano cadastrado."
+        )
+        return
+
+    for plano in planos:
+        print(
+            f"Plano: {plano['nome']} | "
+            f"Valor: R$ {plano['valor']:.2f} | "
+            f"Assinaturas ativas: "
+            f"{plano['quantidade_assinaturas']}"
+        )
+
+
+def menu_relatorios():
+    while True:
+        print()
+        print("=" * 45)
+        print("RELATÓRIOS")
+        print("=" * 45)
+
+        print("1 - Relatório geral")
+        print("2 - Relatório financeiro")
+        print("3 - Relatório de acessos")
+        print("4 - Relatório de planos")
+        print("0 - Voltar")
+
+        print("=" * 45)
+
+        opcao = input(
+            "Escolha uma opção: "
+        ).strip()
+
+        if opcao == "1":
+            mostrar_relatorio_geral()
+
+        elif opcao == "2":
+            mostrar_relatorio_financeiro()
+
+        elif opcao == "3":
+            mostrar_relatorio_acessos()
+
+        elif opcao == "4":
+            mostrar_relatorio_planos()
+
+        elif opcao == "0":
+            break
+
+        else:
+            print()
+            print(
+                "Opção inválida. "
+                "Tente novamente."
+            )
+
+
 def iniciar_menu():
     while True:
         exibir_menu()
@@ -1097,6 +1350,9 @@ def iniciar_menu():
 
         elif opcao == "19":
             gerar_dados_ficticios()
+
+        elif opcao == "20":
+            menu_relatorios()
 
         elif opcao == "0":
             print()

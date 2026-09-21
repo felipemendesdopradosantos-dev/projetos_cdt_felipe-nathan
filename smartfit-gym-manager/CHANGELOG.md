@@ -6,6 +6,63 @@ O projeto utiliza versionamento semântico no formato:
 
 MAJOR.MINOR.PATCH
 
+---
+
+## [0.4.0] - 2026-09-21
+
+### Adicionado
+
+- Exportação completa do banco SQLite para JSON.
+- Diretório dedicado para arquivos exportados.
+- Usuário administrativo `root master`.
+- Autenticação para acesso à exportação JSON.
+- Armazenamento da senha administrativa através de hash.
+- Máscara visual de senha no terminal.
+- Nova tabela `usuarios`.
+- Model `Usuario`.
+- Serviço de autenticação de usuários.
+- Integração da biblioteca Faker.
+- Geração automática de alunos fictícios.
+- Geração automática de assinaturas fictícias.
+- Geração automática de pagamentos fictícios.
+- Geração automática de históricos de acesso fictícios.
+- Relatório geral da academia.
+- Relatório financeiro.
+- Relatório de acessos.
+- Ranking de frequência dos alunos.
+- Relatório de planos.
+- Submenu de relatórios na interface CLI.
+- Documentação dos papéis de PO, QA, UX, Tech Lead/Dev e IA.
+- Estrutura inicial de testes automatizados com Pytest.
+- Banco SQLite temporário para execução isolada dos testes.
+
+### Testes
+
+- Teste automático da criação das tabelas.
+- Testes de autenticação administrativa.
+- Testes de cadastro e consulta de alunos.
+- Testes de validação de CPF e e-mail duplicados.
+- Testes de cadastro e consulta de planos.
+- Teste de duplicidade de planos.
+- Testes de geração de cobranças.
+- Testes de registro de pagamentos.
+- Testes de inadimplência.
+- Testes de autorização de acesso.
+- Testes de bloqueio de acesso por inadimplência.
+- Teste de bloqueio para aluno sem assinatura.
+- Testes de histórico de acesso.
+- Testes dos relatórios geral, financeiro, acessos e planos.
+- 28 testes automatizados executados com sucesso.
+
+### Alterado
+
+- Interface CLI ampliada com opções de Faker e relatórios.
+- Exportação JSON passou a exigir autenticação administrativa.
+- Relatório financeiro passou a atualizar automaticamente pagamentos vencidos antes da consulta.
+- README ampliado com arquitetura, funcionalidades, instalação, autenticação, Faker, relatórios, interfaces planejadas e documentação.
+
+---
+
 ## [0.3.0] - 2026-09-19
 
 ### Adicionado
@@ -36,6 +93,8 @@ MAJOR.MINOR.PATCH
 - Persistência do histórico de acessos.
 - Criação e consulta de fichas de treino.
 
+---
+
 ## [0.2.0] - 2026-09-19
 
 ### Adicionado
@@ -62,6 +121,8 @@ MAJOR.MINOR.PATCH
 - Validação para impedir duplicidade de CPF e e-mail no cadastro de alunos.
 - Validação para impedir duplicidade de nomes de planos.
 - Verificação para evitar múltiplas assinaturas ativas para o mesmo aluno.
+
+---
 
 ## [0.1.0] - 2026-09-19
 

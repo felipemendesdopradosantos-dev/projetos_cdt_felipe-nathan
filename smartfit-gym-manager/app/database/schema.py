@@ -100,6 +100,13 @@ def criar_tabelas():
                 FOREIGN KEY (exercicio_id)
                     REFERENCES exercicios(id)
             );
+
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                usuario TEXT NOT NULL UNIQUE,
+                senha_hash TEXT NOT NULL,
+                perfil TEXT NOT NULL DEFAULT 'administrador'
+            );
             """
         )
 
