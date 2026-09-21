@@ -29,6 +29,14 @@ from app.services.exercicio_service import (
     listar_exercicios,
 )
 
+from app.services.export_service import (
+    exportar_banco_json,
+)
+
+from app.services.faker_service import (
+    popular_dados_demonstracao,
+)
+
 from app.services.pagamento_service import (
     gerar_cobranca_para_assinatura,
     listar_pagamentos,
@@ -57,7 +65,7 @@ def converter_data(data_texto: str) -> date:
         try:
             return datetime.strptime(
                 data_texto,
-                formato
+                formato,
             ).date()
 
         except ValueError:
@@ -97,6 +105,9 @@ def exibir_menu():
     print("15 - Listar treinos de um aluno")
     print("16 - Adicionar exercício ao treino")
     print("17 - Visualizar ficha de treino")
+
+    print("18 - Exportar banco para JSON")
+    print("19 - Gerar dados fictícios com Faker")
 
     print("0 - Sair")
 
@@ -870,12 +881,20 @@ def visualizar_ficha_treino():
     )
 
     print()
+
     print(
         f"Aluno: "
         f"{aluno.nome if aluno else 'Não encontrado'}"
     )
-    print(f"Treino: {treino.nome}")
-    print(f"Objetivo: {treino.objetivo}")
+
+    print(
+        f"Treino: {treino.nome}"
+    )
+
+    print(
+        f"Objetivo: {treino.objetivo}"
+    )
+
     print(
         "Data de criação: "
         f"{treino.data_criacao.strftime('%d/%m/%Y')}"
@@ -919,6 +938,98 @@ def visualizar_ficha_treino():
             f"{item['repeticoes']} reps | "
             f"Carga: {carga} | "
             f"Descanso: {descanso}"
+        )
+
+
+def exportar_dados_json():
+    print()
+    print("--- Exportação para JSON ---")
+
+    try:
+        caminho_arquivo = exportar_banco_json()
+
+        print()
+        print("Banco exportado com sucesso!")
+        print(
+            f"Arquivo: "
+            f"{caminho_arquivo.name}"
+        )
+        print(
+            f"Local: "
+            f"{caminho_arquivo}"
+        )
+
+    except Exception as erro:
+        print()
+        print(
+            "Não foi possível exportar o banco."
+        )
+        print(
+            f"Erro: {erro}"
+        )
+
+
+def gerar_dados_ficticios():
+    print()
+    print("--- Geração de Dados com Faker ---")
+
+    quantidade_texto = input(
+        "Quantidade de alunos a gerar: "
+    ).strip()
+
+    try:
+        quantidade = int(
+            quantidade_texto
+        )
+
+        resultado = popular_dados_demonstracao(
+            quantidade
+        )
+
+        print()
+        print(
+            "Dados fictícios gerados com sucesso!"
+        )
+
+        print(
+            f"Alunos: "
+            f"{resultado['alunos']}"
+        )
+
+        print(
+            f"Planos disponíveis: "
+            f"{resultado['planos']}"
+        )
+
+        print(
+            f"Assinaturas: "
+            f"{resultado['assinaturas']}"
+        )
+
+        print(
+            f"Pagamentos: "
+            f"{resultado['pagamentos']}"
+        )
+
+        print(
+            f"Acessos: "
+            f"{resultado['acessos']}"
+        )
+
+    except ValueError as erro:
+        print()
+        print(
+            f"Erro: {erro}"
+        )
+
+    except Exception as erro:
+        print()
+        print(
+            "Não foi possível gerar "
+            "os dados fictícios."
+        )
+        print(
+            f"Erro: {erro}"
         )
 
 
@@ -980,6 +1091,12 @@ def iniciar_menu():
 
         elif opcao == "17":
             visualizar_ficha_treino()
+
+        elif opcao == "18":
+            exportar_dados_json()
+
+        elif opcao == "19":
+            gerar_dados_ficticios()
 
         elif opcao == "0":
             print()
