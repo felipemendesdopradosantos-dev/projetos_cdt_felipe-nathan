@@ -2,7 +2,7 @@
 
 Sistema de gerenciamento de academia desenvolvido em Python como projeto final de programação.
 
-**Versão atual: `0.4.0`**
+**Versão atual: `0.6.0`**
 
 > Projeto acadêmico independente, sem vínculo oficial com a Smart Fit.
 
@@ -12,25 +12,44 @@ Sistema de gerenciamento de academia desenvolvido em Python como projeto final d
 
 O **SmartFit Gym Manager** é uma aplicação desenvolvida para automatizar processos comuns de gerenciamento de uma academia.
 
-O sistema reúne funcionalidades relacionadas a alunos, planos, assinaturas, pagamentos, inadimplência, controle de acesso, exercícios, fichas de treino, relatórios e exportação de dados.
+O sistema reúne funcionalidades relacionadas a:
 
-A arquitetura foi organizada para permitir o reaproveitamento das mesmas regras de negócio em diferentes interfaces:
+- alunos;
+- planos;
+- assinaturas;
+- pagamentos;
+- inadimplência;
+- controle de acesso;
+- exercícios;
+- fichas de treino;
+- relatórios;
+- geração de dados fictícios;
+- exportação de dados;
+- acesso Web;
+- interface responsiva;
+- acesso por QR Code.
+
+A arquitetura foi estruturada para permitir que diferentes interfaces utilizem as mesmas regras de negócio e o mesmo banco de dados.
 
 ```text
                  CLI
                   │
                   │
-GUI ───────── Services ───────── Web
+GUI ───────── Services ───────── WEB
                   │
                   ↓
                SQLite
 ```
 
-Dessa forma, CLI, GUI e futuramente a aplicação Web utilizam os mesmos serviços e o mesmo banco de dados.
+Atualmente o sistema possui três interfaces funcionais:
+
+- CLI;
+- GUI com Tkinter;
+- aplicação Web com Flask.
 
 ---
 
-## Objetivos
+# Objetivos
 
 O projeto tem como objetivo desenvolver uma aplicação capaz de:
 
@@ -50,8 +69,10 @@ O projeto tem como objetivo desenvolver uma aplicação capaz de:
 - exportar o banco de dados para JSON;
 - proteger a exportação através de autenticação administrativa;
 - disponibilizar interfaces CLI, GUI e Web;
-- gerar uma versão executável da aplicação;
-- disponibilizar acesso Web através de QR Code.
+- funcionar em dispositivos móveis;
+- disponibilizar acesso através de QR Code;
+- disponibilizar uma versão executável;
+- disponibilizar a aplicação Web através de um serviço de hospedagem.
 
 ---
 
@@ -65,13 +86,14 @@ O projeto tem como objetivo desenvolver uma aplicação capaz de:
 - Faker
 - Tkinter
 - Pytest
-
-## Planejadas para as próximas etapas
-
 - Flask
 - HTML
 - CSS
 - QR Code
+- Pillow
+
+## Próximas etapas
+
 - PyInstaller
 - Render
 
@@ -79,20 +101,32 @@ O projeto tem como objetivo desenvolver uma aplicação capaz de:
 
 # Arquitetura
 
-O projeto utiliza uma organização modular para separar responsabilidades.
+O projeto utiliza separação de responsabilidades entre diferentes camadas.
 
 ```text
-Interface
-   │
-   ↓
+Interfaces
+    │
+    ↓
 Services
-   │
-   ↓
+    │
+    ↓
 Models
-   │
-   ↓
+    │
+    ↓
 SQLite
 ```
+
+## Interfaces
+
+Existem três interfaces funcionais:
+
+```text
+CLI
+GUI
+WEB
+```
+
+Todas reutilizam a mesma camada de Services.
 
 ## Models
 
@@ -109,7 +143,7 @@ Representam as principais entidades do sistema:
 
 ## Services
 
-Contêm as regras de negócio da aplicação.
+Contêm as regras de negócio e operações realizadas pelo sistema.
 
 Entre suas responsabilidades estão:
 
@@ -128,15 +162,7 @@ Entre suas responsabilidades estão:
 
 ## Database
 
-Responsável pela conexão e pela criação das tabelas do banco SQLite.
-
-## Interfaces
-
-O projeto foi planejado para possuir três formas principais de interação:
-
-1. **CLI** — interface por terminal;
-2. **GUI** — interface gráfica com Tkinter;
-3. **Web** — aplicação Web com Flask.
+Responsável pela conexão e criação da estrutura do banco SQLite.
 
 ---
 
@@ -163,8 +189,10 @@ smartfit-gym-manager/
 │   │   ├── tela_acesso.py
 │   │   ├── tela_alunos.py
 │   │   ├── tela_assinaturas.py
+│   │   ├── tela_exportacao.py
 │   │   ├── tela_pagamentos.py
 │   │   ├── tela_planos.py
+│   │   ├── tela_relatorios.py
 │   │   └── tela_treinos.py
 │   │
 │   ├── models/
@@ -193,7 +221,24 @@ smartfit-gym-manager/
 │   │   └── usuario_service.py
 │   │
 │   └── web/
-│       └── __init__.py
+│       ├── __init__.py
+│       ├── app_web.py
+│       │
+│       ├── static/
+│       │   └── css/
+│       │       └── style.css
+│       │
+│       └── templates/
+│           ├── acesso.html
+│           ├── alunos.html
+│           ├── assinaturas.html
+│           ├── base.html
+│           ├── dashboard.html
+│           ├── exportacao.html
+│           ├── pagamentos.html
+│           ├── planos.html
+│           ├── qr_code.html
+│           └── relatorios.html
 │
 ├── data/
 │   ├── academia.db
@@ -211,7 +256,8 @@ smartfit-gym-manager/
 │   ├── test_pagamento_service.py
 │   ├── test_plano_service.py
 │   ├── test_relatorio_service.py
-│   └── test_usuario_service.py
+│   ├── test_usuario_service.py
+│   └── test_web.py
 │
 ├── .gitignore
 ├── CHANGELOG.md
@@ -238,7 +284,7 @@ O banco é criado automaticamente durante a inicialização da aplicação.
 
 ## Tabelas
 
-Atualmente existem nove tabelas principais:
+Existem nove tabelas principais:
 
 ```text
 alunos
@@ -254,9 +300,7 @@ usuarios
 
 ---
 
-# Funcionalidades
-
-## Alunos
+# Alunos
 
 O sistema permite:
 
@@ -268,11 +312,19 @@ O sistema permite:
 - impedir CPF duplicado;
 - impedir e-mail duplicado.
 
+O gerenciamento de alunos está disponível pela:
+
+```text
+CLI
+GUI
+WEB
+```
+
 ---
 
-## Planos
+# Planos
 
-É possível:
+O sistema permite:
 
 - cadastrar planos;
 - listar planos;
@@ -281,20 +333,53 @@ O sistema permite:
 - controlar status;
 - impedir nomes duplicados.
 
+A validação de nomes duplicados ignora:
+
+- diferenças entre letras maiúsculas e minúsculas;
+- espaços no início e no final.
+
+Exemplos considerados equivalentes:
+
+```text
+Plano Web
+plano web
+PLANO WEB
+ Plano Web
+Plano Web 
+```
+
+Além da validação no Service, o banco possui proteção através de:
+
+```sql
+LOWER(TRIM(nome))
+```
+
 ---
 
-## Assinaturas
+# Assinaturas
 
 O sistema permite:
 
-- associar alunos a planos;
+- associar aluno a um plano;
 - listar assinaturas;
-- consultar assinatura ativa;
+- identificar assinatura ativa;
 - impedir múltiplas assinaturas ativas para o mesmo aluno.
+
+Fluxo:
+
+```text
+Aluno
+  ↓
+Plano
+  ↓
+Assinatura
+```
+
+A criação de assinaturas está disponível nas interfaces CLI, GUI e Web.
 
 ---
 
-## Pagamentos
+# Pagamentos
 
 O módulo financeiro permite:
 
@@ -308,11 +393,25 @@ O módulo financeiro permite:
 - atualizar automaticamente cobranças vencidas;
 - identificar inadimplência.
 
+Fluxo:
+
+```text
+Assinatura
+    ↓
+Cobrança
+    ↓
+Pagamento
+    ↓
+Pago / Pendente / Atrasado
+```
+
+A aplicação Web permite gerar cobranças, registrar pagamentos e consultar o histórico financeiro.
+
 ---
 
 # Controle de acesso
 
-O acesso de um aluno é avaliado automaticamente.
+O acesso do aluno é avaliado automaticamente.
 
 ```text
 Aluno tenta acessar
@@ -336,20 +435,25 @@ AUTORIZADO / NEGADO
 Registro no histórico
 ```
 
-Exemplo de acesso autorizado:
+O sistema registra tanto acessos autorizados quanto negados.
+
+Exemplos:
 
 ```text
 ACESSO AUTORIZADO
 ```
 
-Exemplo de bloqueio:
+```text
+ACESSO NEGADO
+Motivo: Aluno sem assinatura ativa.
+```
 
 ```text
 ACESSO NEGADO
 Motivo: Pagamento em atraso.
 ```
 
-Todas as tentativas são registradas no banco.
+O controle de acesso está disponível pela CLI, GUI e Web.
 
 ---
 
@@ -362,15 +466,15 @@ O sistema possui gerenciamento de exercícios e fichas de treino.
 - cadastrar exercícios;
 - informar grupo muscular;
 - adicionar descrição;
-- criar treino para um aluno;
-- informar objetivo do treino;
+- criar treino para aluno;
+- informar objetivo;
 - associar exercícios;
 - definir séries;
 - definir repetições;
 - definir carga;
-- definir tempo de descanso;
-- definir ordem dos exercícios;
-- visualizar a ficha completa.
+- definir descanso;
+- definir ordem;
+- visualizar ficha completa.
 
 Exemplo:
 
@@ -390,7 +494,7 @@ Descanso: 90 segundos
 
 # Relatórios
 
-O sistema possui quatro tipos principais de relatório.
+O sistema possui quatro categorias principais.
 
 ## Relatório geral
 
@@ -406,13 +510,11 @@ Apresenta:
 Apresenta:
 
 - total recebido;
-- total pendente;
-- total em atraso;
+- valor pendente;
+- valor atrasado;
 - quantidade de pagamentos realizados;
 - quantidade de pagamentos pendentes;
 - quantidade de pagamentos atrasados.
-
-Antes da consulta, pagamentos vencidos são atualizados automaticamente.
 
 ## Relatório de acessos
 
@@ -421,64 +523,89 @@ Apresenta:
 - total de acessos;
 - acessos autorizados;
 - acessos negados;
-- ranking de frequência dos alunos.
+- ranking de frequência.
 
 ## Relatório de planos
 
 Apresenta:
 
-- plano;
-- valor;
+- nome do plano;
+- valor mensal;
 - quantidade de assinaturas ativas.
+
+Os mesmos Services de relatório são utilizados pela CLI, GUI e Web.
 
 ---
 
 # Faker
 
-O projeto utiliza a biblioteca **Faker** para geração automática de dados fictícios.
+O projeto utiliza **Faker** para geração automática de dados fictícios.
 
-Podem ser criados automaticamente:
+Podem ser gerados:
 
 - alunos;
 - assinaturas;
 - pagamentos;
 - acessos.
 
-Exemplo na CLI:
-
-```text
-19 - Gerar dados fictícios com Faker
-```
-
-Esses registros são gravados no mesmo banco SQLite utilizado pela aplicação.
+Os dados são armazenados no mesmo SQLite utilizado pelo restante da aplicação.
 
 ---
 
 # Exportação JSON
 
-O banco de dados pode ser exportado para arquivos JSON.
+O banco pode ser exportado para JSON.
 
-Os arquivos são armazenados em:
+Arquivos são armazenados em:
 
 ```text
 data/exports/
 ```
 
-O nome do arquivo utiliza data e horário da exportação:
+Exemplo:
 
 ```text
-academia_YYYYMMDD_HHMMSS.json
+academia_20260921_220000.json
 ```
 
-A exportação contém os registros das principais tabelas do sistema.
+A exportação contém:
+
+```text
+alunos
+planos
+assinaturas
+pagamentos
+acessos
+treinos
+exercicios
+treino_exercicios
+```
+
+A tabela:
+
+```text
+usuarios
+```
+
+não é exportada.
+
+A exportação está disponível pela:
+
+```text
+CLI
+GUI
+WEB
+```
+
+Na Web, além de salvar a cópia local, o arquivo é enviado para download pelo navegador.
 
 ---
 
 # Usuário administrador
 
-A exportação JSON é uma funcionalidade protegida por autenticação.
+A exportação JSON é protegida por autenticação.
 
-Credenciais definidas para o projeto:
+Credenciais acadêmicas:
 
 ```text
 Usuário: root master
@@ -487,32 +614,31 @@ Senha: root
 
 A senha não é armazenada diretamente em texto puro no banco.
 
-O sistema armazena seu hash e realiza a comparação durante a autenticação.
+O sistema armazena um hash utilizado para validação.
 
-Na CLI, a senha é exibida de forma mascarada:
+Na CLI e na GUI a senha é mascarada.
 
-```text
-Usuário: root master
-Senha: ****
+Na Web é utilizado:
+
+```html
+<input type="password">
 ```
 
-> As credenciais acima existem para fins acadêmicos e de demonstração. Em uma aplicação real, credenciais padrão não devem ser publicadas e o armazenamento de senhas deve utilizar mecanismos próprios para password hashing.
+> As credenciais padrão existem para fins acadêmicos. Uma aplicação real deve utilizar credenciais configuráveis e mecanismos específicos para armazenamento seguro de senhas.
 
 ---
 
 # Interface CLI
 
-A CLI representa a primeira versão funcional da aplicação.
+A CLI representa a primeira interface funcional do projeto.
 
 ## Executar
-
-Na raiz do projeto:
 
 ```bash
 py main.py
 ```
 
-## Menu
+## Menu principal
 
 ```text
 1  - Cadastrar aluno
@@ -558,36 +684,7 @@ A segunda interface utiliza **Tkinter**.
 py -m app.gui.janela_principal
 ```
 
-A GUI utiliza os mesmos `services` e o mesmo banco SQLite da CLI.
-
-```text
-CLI ──┐
-      │
-      ├──── Services ──── SQLite
-      │
-GUI ──┘
-```
-
-Isso significa que um aluno cadastrado pela GUI também aparece na CLI e vice-versa.
-
-## Dashboard
-
-O Dashboard exibe indicadores como:
-
-- total de alunos;
-- assinaturas ativas;
-- total recebido;
-- quantidade de acessos;
-- alunos ativos;
-- planos ativos;
-- pagamentos pendentes;
-- pagamentos atrasados;
-- acessos autorizados;
-- acessos negados.
-
-## Módulos da GUI
-
-Atualmente estão sendo construídos os seguintes módulos:
+A GUI possui:
 
 ```text
 Dashboard
@@ -601,7 +698,52 @@ Relatórios
 Exportação JSON
 ```
 
-Já foram implementadas as bases gráficas para:
+A GUI utiliza os mesmos Services e o mesmo SQLite da CLI.
+
+---
+
+# Interface Web
+
+A terceira interface utiliza:
+
+```text
+Flask
+HTML
+CSS
+```
+
+## Executar
+
+```bash
+py -m app.web.app_web
+```
+
+O servidor utiliza:
+
+```python
+host="0.0.0.0"
+port=5000
+```
+
+Isso permite acesso através do próprio computador e de outros dispositivos na mesma rede local.
+
+No computador:
+
+```text
+http://127.0.0.1:5000
+```
+
+Na rede local:
+
+```text
+http://IP_DO_COMPUTADOR:5000
+```
+
+---
+
+# Funcionalidades Web
+
+A versão Web possui:
 
 - Dashboard;
 - Alunos;
@@ -609,79 +751,234 @@ Já foram implementadas as bases gráficas para:
 - Assinaturas;
 - Pagamentos;
 - Controle de Acesso;
-- Treinos.
-
-Ainda serão concluídas:
-
-- tela de Relatórios;
-- exportação JSON com autenticação pela GUI;
-- revisão e teste completo da interface.
+- Relatórios;
+- Exportação JSON;
+- QR Code.
 
 ---
 
-# Interface Web
+# Dashboard Web
 
-A versão Web será desenvolvida utilizando **Flask**.
+Apresenta:
 
-Ela deverá reaproveitar os mesmos `services` utilizados pela CLI e pela GUI.
+- total de alunos;
+- assinaturas ativas;
+- total recebido;
+- quantidade de acessos;
+- alunos ativos;
+- planos ativos;
+- pagamentos pendentes;
+- pagamentos atrasados;
+- acessos autorizados;
+- acessos negados.
 
-Arquitetura planejada:
+---
+
+# Alunos Web
+
+Rota:
 
 ```text
-                 CLI
-                  │
-                  │
-GUI ───────── Services ───────── WEB
-                  │
-                  ↓
-               SQLite
+/alunos
 ```
 
-A aplicação Web deverá disponibilizar funcionalidades como:
-
-- Dashboard;
-- alunos;
-- planos;
-- assinaturas;
-- pagamentos;
-- controle de acesso;
-- relatórios;
-- exportação de dados.
+Permite cadastrar e consultar alunos diretamente pelo navegador.
 
 ---
 
-# Interface mobile
+# Planos Web
 
-A versão Web será desenvolvida de forma responsiva.
+Rota:
 
-Uma das dimensões de referência para teste será:
+```text
+/planos
+```
+
+Permite cadastrar e consultar planos.
+
+As regras de duplicidade do `plano_service.py` também são aplicadas na Web.
+
+---
+
+# Assinaturas Web
+
+Rota:
+
+```text
+/assinaturas
+```
+
+Permite:
+
+- selecionar aluno;
+- selecionar plano;
+- definir data de início;
+- definir data final;
+- criar assinatura;
+- visualizar assinaturas cadastradas.
+
+---
+
+# Pagamentos Web
+
+Rota:
+
+```text
+/pagamentos
+```
+
+Permite:
+
+- gerar cobranças;
+- selecionar assinatura;
+- definir vencimento;
+- registrar pagamento;
+- selecionar forma de pagamento;
+- consultar histórico financeiro.
+
+---
+
+# Controle de Acesso Web
+
+Rota:
+
+```text
+/acesso
+```
+
+Permite verificar a entrada de um aluno.
+
+O sistema avalia:
+
+```text
+status do aluno
+assinatura
+inadimplência
+```
+
+e retorna:
+
+```text
+AUTORIZADO
+```
+
+ou:
+
+```text
+NEGADO
+```
+
+Todas as tentativas são registradas.
+
+---
+
+# Relatórios Web
+
+Rota:
+
+```text
+/relatorios
+```
+
+Disponibiliza:
+
+```text
+Geral
+Financeiro
+Acessos
+Ranking de frequência
+Planos
+```
+
+---
+
+# Exportação JSON Web
+
+Rota:
+
+```text
+/exportacao
+```
+
+Exige autenticação administrativa antes da exportação.
+
+Após autenticação correta:
+
+```text
+SQLite
+   ↓
+export_service.py
+   ↓
+JSON
+   ↓
+data/exports/
+   +
+download pelo navegador
+```
+
+---
+
+# Interface responsiva
+
+A aplicação Web possui layout responsivo.
+
+Foi realizada validação específica na resolução:
 
 ```text
 320 x 800 px
 ```
 
-A aplicação deverá funcionar adequadamente em dispositivos móveis.
+Em telas menores:
+
+- menu lateral passa para o topo;
+- navegação é organizada em duas colunas;
+- cards passam para uma coluna;
+- formulários passam para uma coluna;
+- textos podem quebrar linha;
+- componentes respeitam a largura disponível;
+- tabelas utilizam rolagem horizontal própria.
+
+A interface foi validada através das ferramentas de dispositivo do navegador e também em dispositivo móvel real.
 
 ---
 
 # QR Code
 
-Após a implementação do servidor Web será gerado um QR Code apontando para o endereço da aplicação.
+A aplicação possui uma página dedicada ao QR Code.
 
-Fluxo esperado:
+Rota:
 
 ```text
-Servidor Web
-     │
-     ↓
-URL da aplicação
-     │
-     ↓
-QR Code
-     │
-     ↓
-Celular
+/qr
 ```
+
+Imagem:
+
+```text
+/qr/imagem
+```
+
+O endereço local do computador é identificado automaticamente.
+
+Fluxo:
+
+```text
+Flask
+  ↓
+IP local
+  ↓
+URL da aplicação
+  ↓
+QR Code
+  ↓
+Celular
+  ↓
+Dashboard
+```
+
+O celular deve estar conectado à mesma rede local do computador durante a execução local.
+
+O QR Code foi validado com sucesso em dispositivo móvel real.
 
 ---
 
@@ -693,43 +990,47 @@ Celular
 git clone URL_DO_REPOSITORIO
 ```
 
-## 2. Entrar na pasta
+## 2. Entrar no projeto
 
 ```bash
 cd smartfit-gym-manager
 ```
 
-## 3. Instalar as dependências
+## 3. Instalar dependências
 
 ```bash
 py -m pip install -r requirements.txt
 ```
 
-## 4. Executar a CLI
+## 4. Executar CLI
 
 ```bash
 py main.py
 ```
 
-## 5. Executar a GUI
+## 5. Executar GUI
 
 ```bash
 py -m app.gui.janela_principal
+```
+
+## 6. Executar Web
+
+```bash
+py -m app.web.app_web
 ```
 
 ---
 
 # Dependências
 
-O arquivo:
+As dependências são registradas no:
 
 ```text
 requirements.txt
 ```
 
-contém as dependências externas utilizadas ou previstas pelo projeto.
-
-Exemplo:
+Principais dependências externas:
 
 ```text
 Flask
@@ -739,7 +1040,7 @@ pytest
 pyinstaller
 ```
 
-Algumas bibliotecas utilizadas fazem parte da biblioteca padrão do Python e não precisam ser instaladas via `pip`, como:
+Bibliotecas como estas fazem parte do Python ou da instalação padrão:
 
 ```text
 sqlite3
@@ -747,54 +1048,92 @@ json
 hashlib
 datetime
 pathlib
+socket
+tkinter
 ```
 
 ---
 
 # Testes automatizados
 
-O sistema utiliza **Pytest** para validar suas principais regras de negócio.
+O projeto utiliza **Pytest**.
 
-## Executar os testes
+## Executar
 
 ```bash
 py -m pytest -v
 ```
 
-Os testes utilizam um banco SQLite temporário para evitar alterações no banco principal.
-
-## Cobertura atual
-
-São testados cenários relacionados a:
-
-- criação das tabelas;
-- criação do usuário administrativo;
-- autenticação correta;
-- autenticação inválida;
-- cadastro de alunos;
-- busca de alunos;
-- CPF duplicado;
-- e-mail duplicado;
-- cadastro de planos;
-- busca de planos;
-- plano duplicado;
-- geração de cobranças;
-- registro de pagamentos;
-- atualização automática de cobranças atrasadas;
-- identificação de inadimplência;
-- autorização de acesso;
-- bloqueio por inadimplência;
-- bloqueio para aluno sem assinatura;
-- histórico de acessos;
-- relatório geral;
-- relatório financeiro;
-- relatório de acessos;
-- relatório de planos.
-
-Resultado validado:
+Resultado atual:
 
 ```text
-28 passed
+35 passed
+```
+
+Os testes utilizam bancos SQLite temporários para não alterar:
+
+```text
+data/academia.db
+```
+
+---
+
+# Testes da camada Web
+
+A versão `0.6.0` adicionou testes específicos da aplicação Flask.
+
+Foram adicionados testes para:
+
+- abertura das principais páginas;
+- geração da imagem do QR Code;
+- cadastro de aluno pela Web;
+- bloqueio de plano duplicado pela Web;
+- fluxo principal integrado da aplicação.
+
+O teste de integração executa:
+
+```text
+Aluno
+ ↓
+Plano
+ ↓
+Assinatura
+ ↓
+Cobrança
+ ↓
+Pagamento
+ ↓
+Controle de acesso
+ ↓
+AUTORIZADO
+```
+
+---
+
+# Cenários de testes
+
+A suíte inclui cenários relacionados a:
+
+- criação das tabelas;
+- autenticação;
+- cadastro de alunos;
+- CPF duplicado;
+- e-mail duplicado;
+- planos;
+- planos duplicados;
+- normalização de nomes;
+- pagamentos;
+- inadimplência;
+- acessos;
+- relatórios;
+- rotas Flask;
+- QR Code;
+- integração Web.
+
+Resultado:
+
+```text
+35 passed
 ```
 
 ---
@@ -807,43 +1146,45 @@ O projeto utiliza **Versionamento Semântico**:
 MAJOR.MINOR.PATCH
 ```
 
+## PATCH
+
+Correções de bugs.
+
 Exemplo:
 
 ```text
-0.4.0
-```
-
-## PATCH
-
-Utilizado para correções de bugs.
-
-```text
-0.4.0 → 0.4.1
+0.5.0 → 0.5.1
 ```
 
 ## MINOR
 
-Utilizado quando novas funcionalidades compatíveis são adicionadas.
+Novas funcionalidades compatíveis.
+
+Exemplo:
 
 ```text
-0.4.0 → 0.5.0
+0.5.1 → 0.6.0
 ```
+
+A versão `0.6.0` foi criada após a conclusão da aplicação Web funcional.
 
 ## MAJOR
 
-Utilizado para mudanças estruturais importantes ou lançamento de uma versão estável.
+Mudanças estruturais importantes ou lançamento da versão estável.
+
+Exemplo:
 
 ```text
 0.9.0 → 1.0.0
 ```
 
-A versão atual também está registrada no arquivo:
+A versão está registrada em:
 
 ```text
 VERSION
 ```
 
-O histórico de alterações fica disponível em:
+O histórico está em:
 
 ```text
 CHANGELOG.md
@@ -854,33 +1195,40 @@ CHANGELOG.md
 # Versão atual
 
 ```text
-0.4.0
+0.6.0
 ```
 
-A versão `0.4.0` consolidou funcionalidades como:
+A versão `0.6.0` consolida a terceira interface funcional do sistema.
+
+Principais recursos:
 
 - CLI funcional;
-- SQLite;
-- autenticação;
-- exportação JSON;
-- Faker;
+- GUI funcional;
+- Web funcional;
+- banco SQLite compartilhado;
+- gerenciamento de alunos;
+- gerenciamento de planos;
+- assinaturas;
+- pagamentos;
+- inadimplência;
+- controle de acesso;
+- treinos;
+- exercícios;
 - relatórios;
-- documentação;
-- testes automatizados.
-
-A GUI está sendo desenvolvida sobre essa base.
-
-Quando o fluxo principal da interface gráfica estiver concluído e validado, a próxima versão planejada será:
-
-```text
-0.5.0
-```
+- Faker;
+- exportação JSON;
+- autenticação administrativa;
+- interface responsiva;
+- mobile `320 x 800`;
+- acesso pela rede local;
+- QR Code;
+- 35 testes automatizados aprovados.
 
 ---
 
 # Papéis do projeto
 
-Durante o desenvolvimento foram considerados os seguintes papéis:
+Durante o desenvolvimento são considerados:
 
 ```text
 PO - Product Owner
@@ -890,40 +1238,75 @@ Tech Lead / Desenvolvedor
 IA - Inteligência Artificial
 ```
 
-Como o projeto é acadêmico e individual, uma mesma pessoa pode assumir diferentes responsabilidades durante o desenvolvimento.
+## Product Owner
 
-A Inteligência Artificial é utilizada como ferramenta de apoio para:
+Responsável por:
+
+- definição do objetivo;
+- funcionalidades;
+- escopo;
+- priorização;
+- organização das versões.
+
+## QA
+
+Responsável por:
+
+- testes manuais;
+- testes automatizados;
+- validação de regras;
+- identificação de erros;
+- testes de regressão;
+- validação das interfaces.
+
+## UX
+
+Responsável por:
+
+- organização visual;
+- navegação;
+- formulários;
+- mensagens;
+- responsividade;
+- experiência de uso.
+
+## Tech Lead / Desenvolvedor
+
+Responsável por:
+
+- arquitetura;
+- models;
+- services;
+- banco;
+- interfaces;
+- integração;
+- versionamento;
+- desenvolvimento.
+
+## Inteligência Artificial
+
+Utilizada como ferramenta de apoio para:
 
 - planejamento;
 - arquitetura;
-- explicação de conceitos;
 - desenvolvimento;
-- revisão de código;
-- identificação de possíveis erros;
-- criação de testes;
-- documentação.
+- revisão;
+- testes;
+- documentação;
+- explicação de conceitos.
 
-Mais detalhes estão disponíveis em:
-
-```text
-docs/papeis_projeto.md
-```
+As decisões e validações finais permanecem sob responsabilidade do desenvolvedor.
 
 ---
 
 # Documentação
 
-A documentação complementar está localizada em:
+Arquivos complementares:
 
 ```text
 docs/
-```
-
-Arquivos atuais:
-
-```text
-requisitos.md
-papeis_projeto.md
+├── requisitos.md
+└── papeis_projeto.md
 ```
 
 ---
@@ -938,29 +1321,34 @@ Objetivo:
 SmartFitGymManager.exe
 ```
 
-A versão executável deverá permitir abrir a aplicação gráfica diretamente, sem necessidade de executar comandos manualmente no terminal.
+O executável deverá abrir a interface gráfica sem exigir comandos no terminal.
 
 ---
 
 # Publicação Web
 
-A aplicação Web será posteriormente publicada em um serviço compatível com aplicações Python/Flask.
+A próxima etapa é disponibilizar a aplicação em um ambiente Web.
 
-A opção planejada é o **Render**.
-
-Após a publicação, o projeto deverá possuir:
+A opção planejada é:
 
 ```text
+Render
+```
+
+Fluxo esperado:
+
+```text
+GitHub
+   ↓
+Render
+   ↓
 URL pública
-      │
-      ↓
+   ↓
 Aplicação Flask
-      │
-      ↓
+   ↓
 QR Code
-      │
-      ↓
-Acesso pelo celular
+   ↓
+Celular
 ```
 
 ---
@@ -970,11 +1358,13 @@ Acesso pelo celular
 ## Concluído
 
 - [x] Estrutura modular
-- [x] Banco SQLite
+- [x] SQLite
 - [x] Models
 - [x] Services
 - [x] CLI
-- [x] Cadastro de alunos
+- [x] GUI Tkinter
+- [x] Dashboard GUI
+- [x] Alunos
 - [x] Planos
 - [x] Assinaturas
 - [x] Pagamentos
@@ -985,37 +1375,35 @@ Acesso pelo celular
 - [x] Faker
 - [x] Relatórios
 - [x] Exportação JSON
-- [x] Usuário `root master`
 - [x] Autenticação
-- [x] Documentação
-- [x] Pytest
-- [x] 28 testes automatizados aprovados
-- [x] Estrutura inicial da GUI
-- [x] Dashboard Tkinter
-- [x] GUI de alunos
-- [x] GUI de planos
-- [x] GUI de assinaturas
-- [x] GUI de pagamentos
-- [x] GUI de controle de acesso
-- [x] GUI de treinos
+- [x] Testes automatizados
+- [x] Flask
+- [x] Dashboard Web
+- [x] Alunos Web
+- [x] Planos Web
+- [x] Assinaturas Web
+- [x] Pagamentos Web
+- [x] Controle de Acesso Web
+- [x] Relatórios Web
+- [x] Exportação JSON Web
+- [x] Responsividade Web
+- [x] Validação `320 x 800`
+- [x] Acesso pelo celular
+- [x] QR Code
+- [x] Testes Web
+- [x] 35 testes aprovados
+- [x] Versão `0.6.0`
 
 ## Próximas etapas
 
-- [ ] Relatórios na GUI
-- [ ] Exportação JSON pela GUI
-- [ ] Teste completo da GUI
-- [ ] Versão `0.5.0`
-- [ ] Aplicação Web com Flask
-- [ ] Interface responsiva para `320 x 800`
-- [ ] QR Code
-- [ ] Publicação Web
 - [ ] Executável com PyInstaller
+- [ ] Publicação Web
 - [ ] Testes com outros usuários
-- [ ] Teste do projeto após `git clone`
+- [ ] Teste completo após `git clone`
 - [ ] Revisão final do GitHub
-- [ ] Documentação final
+- [ ] Revisão da documentação
+- [ ] Preparação do pitch
 - [ ] Versão estável `1.0.0`
-- [ ] Pitch final
 
 ---
 
@@ -1025,26 +1413,51 @@ Acesso pelo celular
 |---|---|
 | Arquitetura | Concluído |
 | SQLite | Concluído |
-| Regras de negócio | Concluído |
-| CLI | Concluído |
+| Services | Concluído |
+| CLI | Concluída |
+| GUI | Concluída |
+| Web | Concluída |
+| Flask | Concluído |
 | JSON | Concluído |
 | Faker | Concluído |
 | Relatórios | Concluído |
-| Autenticação | Concluído |
-| Testes | 28 aprovados |
-| GUI | Em desenvolvimento |
-| Web | Não iniciada |
-| Mobile | Não iniciado |
-| QR Code | Não iniciado |
+| Autenticação | Concluída |
+| Mobile 320 x 800 | Concluído |
+| QR Code | Concluído |
+| Testes automatizados | 35 aprovados |
 | Executável | Não iniciado |
 | Deploy | Não iniciado |
+| Teste com usuários | Pendente |
+| Versão atual | `0.6.0` |
 | Versão estável | Não concluída |
+
+---
+
+# Próximas etapas
+
+Com a aplicação Web concluída, os próximos objetivos são:
+
+```text
+PyInstaller
+    ↓
+Executável local
+    ↓
+Deploy Web
+    ↓
+Teste com outras pessoas
+    ↓
+Teste após git clone
+    ↓
+Revisão final
+    ↓
+1.0.0
+```
 
 ---
 
 # Licença
 
-As condições de utilização do projeto estão disponíveis no arquivo:
+As condições de utilização estão disponíveis em:
 
 ```text
 LICENSE
@@ -1052,6 +1465,6 @@ LICENSE
 
 ---
 
-## Autor
+# Autor
 
 Projeto desenvolvido como trabalho final de programação.
