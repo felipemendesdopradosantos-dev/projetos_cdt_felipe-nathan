@@ -8,6 +8,29 @@ def cadastrar_plano(plano: Plano) -> Plano:
     conexao = obter_conexao()
 
     try:
+        nome_normalizado = plano.nome.strip()
+
+        if not nome_normalizado:
+            raise ValueError(
+                "O nome do plano não pode ficar vazio."
+            )
+
+        plano_existente = conexao.execute(
+            """
+            SELECT id
+            FROM planos
+            WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))
+            """,
+            (nome_normalizado,),
+        ).fetchone()
+
+        if plano_existente is not None:
+            raise ValueError(
+                "Já existe um plano cadastrado com esse nome."
+            )
+
+        plano.nome = nome_normalizado
+
         cursor = conexao.execute(
             """
             INSERT INTO planos (
@@ -59,13 +82,18 @@ def listar_planos() -> list[Plano]:
             """
         ).fetchall()
 
-        return [_linha_para_plano(linha) for linha in linhas]
+        return [
+            _linha_para_plano(linha)
+            for linha in linhas
+        ]
 
     finally:
         conexao.close()
 
 
-def buscar_plano_por_id(plano_id: int) -> Plano | None:
+def buscar_plano_por_id(
+    plano_id: int,
+) -> Plano | None:
     conexao = obter_conexao()
 
     try:
@@ -92,7 +120,9 @@ def buscar_plano_por_id(plano_id: int) -> Plano | None:
         conexao.close()
 
 
-def buscar_plano_por_nome(nome: str) -> Plano | None:
+def buscar_plano_por_nome(
+    nome: str,
+) -> Plano | None:
     conexao = obter_conexao()
 
     try:
@@ -105,7 +135,7 @@ def buscar_plano_por_nome(nome: str) -> Plano | None:
                 descricao,
                 ativo
             FROM planos
-            WHERE nome = ?
+            WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))
             """,
             (nome,),
         ).fetchone()

@@ -121,3 +121,48 @@ def test_nao_permite_nome_de_plano_duplicado(
         cadastrar_plano(
             segundo_plano
         )
+
+
+def test_nao_permite_plano_duplicado_ignorando_maiusculas(
+    banco_teste,
+):
+    primeiro_plano = criar_plano_teste(
+        nome="Plano Web",
+        valor=129.90,
+    )
+
+    segundo_plano = criar_plano_teste(
+        nome="plano web",
+        valor=149.90,
+    )
+
+    cadastrar_plano(
+        primeiro_plano
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Já existe um plano cadastrado com esse nome",
+    ):
+        cadastrar_plano(
+            segundo_plano
+        )
+
+
+def test_buscar_plano_por_nome_ignora_maiusculas_e_espacos(
+    banco_teste,
+):
+    plano = cadastrar_plano(
+        criar_plano_teste(
+            nome="Plano Premium",
+            valor=199.90,
+        )
+    )
+
+    plano_encontrado = buscar_plano_por_nome(
+        "  PLANO PREMIUM  "
+    )
+
+    assert plano_encontrado is not None
+    assert plano_encontrado.id == plano.id
+    assert plano_encontrado.nome == "Plano Premium"

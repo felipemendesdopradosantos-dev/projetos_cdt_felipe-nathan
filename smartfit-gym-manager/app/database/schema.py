@@ -107,6 +107,12 @@ def criar_tabelas():
                 senha_hash TEXT NOT NULL,
                 perfil TEXT NOT NULL DEFAULT 'administrador'
             );
+
+            CREATE UNIQUE INDEX IF NOT EXISTS
+                idx_planos_nome_normalizado
+            ON planos (
+                LOWER(TRIM(nome))
+            );
             """
         )
 

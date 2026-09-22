@@ -8,6 +8,61 @@ MAJOR.MINOR.PATCH
 
 ---
 
+## [0.5.1] - 2026-09-21
+
+### Corrigido
+- Corrigida a validação de nomes duplicados no cadastro de planos.
+- Nomes de planos agora são comparados ignorando diferenças entre letras maiúsculas e minúsculas.
+- Espaços no início e no final dos nomes dos planos são desconsiderados na validação e na busca.
+- Adicionada validação explícita de duplicidade no `plano_service.py`.
+- Adicionado índice único normalizado no SQLite utilizando `LOWER(TRIM(nome))`.
+- Corrigida a duplicidade identificada durante os testes da interface Web.
+
+### Testes
+- Adicionados testes de regressão para nomes de planos com diferenças de capitalização.
+- Adicionado teste para busca de planos ignorando capitalização e espaços.
+- Suíte automatizada ampliada de 28 para 30 testes.
+- 30 testes automatizados executados com sucesso.
+
+## [0.5.0] - 2026-09-21
+
+### Adicionado
+- Interface gráfica completa utilizando Tkinter.
+- Dashboard gráfico conectado ao banco SQLite.
+- Tela de gerenciamento de alunos.
+- Tela de gerenciamento de planos.
+- Tela de gerenciamento de assinaturas.
+- Tela de gerenciamento de pagamentos.
+- Tela de controle de acesso.
+- Retorno visual para acessos autorizados e negados.
+- Histórico de acessos na interface gráfica.
+- Interface para cadastro e consulta de exercícios.
+- Interface para criação de treinos.
+- Interface para montagem e visualização de fichas de treino.
+- Tela de relatórios.
+- Relatório geral na GUI.
+- Relatório financeiro na GUI.
+- Relatório de acessos e ranking de frequência na GUI.
+- Relatório de planos na GUI.
+- Exportação JSON através da interface gráfica.
+- Autenticação administrativa para exportação JSON na GUI.
+- Máscara de senha na autenticação gráfica.
+
+### Alterado
+- Aplicação passou a possuir duas interfaces funcionais: CLI e GUI.
+- GUI passou a reutilizar os mesmos Services utilizados pela CLI.
+- Navegação gráfica organizada através de menu lateral.
+- Fluxos de alunos, planos, assinaturas, pagamentos, acesso e treinos integrados ao mesmo banco SQLite.
+- README atualizado para refletir a conclusão da interface gráfica.
+
+### Testes
+- Interface gráfica validada manualmente.
+- CLI executada novamente após a implementação da GUI.
+- Dependências do projeto validadas através do requirements.txt.
+- Suíte automatizada executada após a implementação da GUI.
+- 28 testes automatizados executados com sucesso.
+
+
 ## [0.4.0] - 2026-09-21
 
 ### Adicionado

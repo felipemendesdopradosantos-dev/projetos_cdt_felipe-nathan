@@ -6,8 +6,10 @@ from app.database.schema import criar_tabelas
 from app.gui.tela_acesso import TelaAcesso
 from app.gui.tela_alunos import TelaAlunos
 from app.gui.tela_assinaturas import TelaAssinaturas
+from app.gui.tela_exportacao import TelaExportacao
 from app.gui.tela_pagamentos import TelaPagamentos
 from app.gui.tela_planos import TelaPlanos
+from app.gui.tela_relatorios import TelaRelatorios
 from app.gui.tela_treinos import TelaTreinos
 
 from app.services.relatorio_service import (
@@ -143,16 +145,12 @@ class JanelaPrincipal:
 
         self.criar_botao_menu(
             "Relatórios",
-            lambda: self.funcionalidade_em_breve(
-                "Relatórios"
-            ),
+            self.carregar_relatorios,
         )
 
         self.criar_botao_menu(
             "Exportar JSON",
-            lambda: self.funcionalidade_em_breve(
-                "Exportação JSON"
-            ),
+            self.carregar_exportacao,
         )
 
         versao = obter_versao()
@@ -261,6 +259,20 @@ class JanelaPrincipal:
         self.limpar_area_principal()
 
         TelaTreinos(
+            self.area_principal
+        )
+
+    def carregar_relatorios(self):
+        self.limpar_area_principal()
+
+        TelaRelatorios(
+            self.area_principal
+        )
+
+    def carregar_exportacao(self):
+        self.limpar_area_principal()
+
+        TelaExportacao(
             self.area_principal
         )
 
@@ -564,18 +576,6 @@ class JanelaPrincipal:
         label_valor.pack(
             anchor="w",
             pady=(8, 0),
-        )
-
-    def funcionalidade_em_breve(
-        self,
-        nome,
-    ):
-        messagebox.showinfo(
-            nome,
-            (
-                f"A tela de {nome} será "
-                "implementada na próxima etapa."
-            ),
         )
 
 
