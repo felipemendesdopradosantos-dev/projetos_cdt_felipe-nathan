@@ -1,3 +1,4 @@
+import sys
 import tkinter as tk
 from pathlib import Path
 from tkinter import messagebox
@@ -23,19 +24,46 @@ from app.services.usuario_service import (
 )
 
 
-RAIZ_PROJETO = Path(
-    __file__
-).resolve().parents[2]
+def obter_caminho_version() -> Path:
+    if getattr(
+        sys,
+        "frozen",
+        False,
+    ):
+        pasta_recursos = Path(
+            getattr(
+                sys,
+                "_MEIPASS",
+                Path(sys.executable)
+                .resolve()
+                .parent,
+            )
+        )
 
-CAMINHO_VERSION = (
-    RAIZ_PROJETO
-    / "VERSION"
-)
+        return (
+            pasta_recursos
+            / "VERSION"
+        )
+
+    raiz_projeto = (
+        Path(__file__)
+        .resolve()
+        .parents[2]
+    )
+
+    return (
+        raiz_projeto
+        / "VERSION"
+    )
 
 
 def obter_versao():
+    caminho_version = (
+        obter_caminho_version()
+    )
+
     with open(
-        CAMINHO_VERSION,
+        caminho_version,
         "r",
         encoding="utf-8",
     ) as arquivo:
