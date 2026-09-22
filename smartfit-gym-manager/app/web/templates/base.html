@@ -77,38 +77,69 @@
                 </a>
 
                 <a
-                    href="#"
-                    class="menu-item"
+                    href="{{ url_for('assinaturas') }}"
+                    class="menu-item
+                    {% if request.endpoint == 'assinaturas' %}
+                    active
+                    {% endif %}
+                    "
                 >
                     Assinaturas
                 </a>
 
                 <a
-                    href="#"
-                    class="menu-item"
+                    href="{{ url_for('pagamentos') }}"
+                    class="menu-item
+                    {% if request.endpoint == 'pagamentos' %}
+                    active
+                    {% endif %}
+                    "
                 >
                     Pagamentos
                 </a>
 
                 <a
-                    href="#"
-                    class="menu-item"
+                    href="{{ url_for('acesso') }}"
+                    class="menu-item
+                    {% if request.endpoint == 'acesso' %}
+                    active
+                    {% endif %}
+                    "
                 >
                     Controle de Acesso
                 </a>
 
                 <a
-                    href="#"
-                    class="menu-item"
+                    href="{{ url_for('relatorios') }}"
+                    class="menu-item
+                    {% if request.endpoint == 'relatorios' %}
+                    active
+                    {% endif %}
+                    "
                 >
                     Relatórios
                 </a>
 
                 <a
-                    href="#"
-                    class="menu-item"
+                    href="{{ url_for('exportacao') }}"
+                    class="menu-item
+                    {% if request.endpoint == 'exportacao' %}
+                    active
+                    {% endif %}
+                    "
                 >
                     Exportar JSON
+                </a>
+
+                <a
+                    href="{{ url_for('qr_code') }}"
+                    class="menu-item
+                    {% if request.endpoint == 'qr_code' %}
+                    active
+                    {% endif %}
+                    "
+                >
+                    QR Code
                 </a>
 
             </nav>

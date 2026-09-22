@@ -4,10 +4,17 @@
     padding: 0;
 }
 
+html,
+body {
+    max-width: 100%;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: #f4f4f4;
     color: #111111;
+
+    overflow-x: hidden;
 }
 
 button,
@@ -19,6 +26,8 @@ select {
 .app {
     display: flex;
     min-height: 100vh;
+
+    max-width: 100%;
 }
 
 
@@ -116,6 +125,8 @@ select {
     width: calc(100% - 230px);
 
     padding: 32px;
+
+    min-width: 0;
 }
 
 .page-header {
@@ -126,6 +137,8 @@ select {
     margin-bottom: 30px;
 
     border-radius: 6px;
+
+    min-width: 0;
 }
 
 .page-header h1 {
@@ -160,6 +173,8 @@ select {
     padding: 24px;
 
     border-radius: 6px;
+
+    min-width: 0;
 }
 
 .card-title {
@@ -177,6 +192,8 @@ select {
     display: block;
 
     font-size: 25px;
+
+    overflow-wrap: anywhere;
 }
 
 .section {
@@ -195,6 +212,8 @@ select {
     padding: 25px 30px;
 
     border-radius: 6px;
+
+    min-width: 0;
 }
 
 .summary-row {
@@ -206,6 +225,8 @@ select {
     padding: 11px 0;
 
     border-bottom: 1px solid #eeeeee;
+
+    gap: 15px;
 }
 
 .summary-row:last-child {
@@ -232,6 +253,8 @@ select {
 
     font-size: 14px;
     font-weight: bold;
+
+    overflow-wrap: anywhere;
 }
 
 .message-sucesso {
@@ -257,14 +280,20 @@ select {
     border-radius: 6px;
 
     margin-bottom: 25px;
+
+    min-width: 0;
 }
 
 .section-title {
     margin-bottom: 22px;
+
+    min-width: 0;
 }
 
 .section-title h2 {
     font-size: 19px;
+
+    overflow-wrap: anywhere;
 }
 
 .section-title p {
@@ -273,6 +302,8 @@ select {
     color: #777777;
 
     font-size: 13px;
+
+    overflow-wrap: anywhere;
 }
 
 
@@ -287,11 +318,15 @@ select {
         repeat(4, minmax(0, 1fr));
 
     gap: 15px;
+
+    min-width: 0;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
+
+    min-width: 0;
 }
 
 .form-span-2 {
@@ -310,6 +345,8 @@ select {
 .form-group input,
 .form-group select {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
 
     padding: 11px 12px;
 
@@ -328,6 +365,8 @@ select {
 .form-actions {
     display: flex;
     align-items: end;
+
+    min-width: 0;
 }
 
 .button {
@@ -363,6 +402,7 @@ select {
 
 .table-wrapper {
     width: 100%;
+    max-width: 100%;
 
     overflow-x: auto;
 }
@@ -450,6 +490,9 @@ tbody tr:hover {
 
     .app {
         display: block;
+
+        width: 100%;
+        max-width: 100%;
     }
 
     .sidebar {
@@ -460,26 +503,41 @@ tbody tr:hover {
     }
 
     .brand {
-        padding: 20px;
+        padding: 18px 15px 14px;
     }
 
     .brand-main {
         font-size: 21px;
     }
 
+    .brand-sub {
+        font-size: 13px;
+    }
+
     .menu {
         display: grid;
 
         grid-template-columns:
-            repeat(2, 1fr);
+            repeat(2, minmax(0, 1fr));
 
         margin-top: 0;
+
+        width: 100%;
     }
 
     .menu-item {
-        padding: 12px 15px;
+        min-width: 0;
 
-        font-size: 12px;
+        padding: 11px 10px;
+
+        font-size: 11px;
+        line-height: 1.2;
+
+        white-space: normal;
+        overflow-wrap: anywhere;
+
+        display: flex;
+        align-items: center;
     }
 
     .sidebar-version {
@@ -490,18 +548,33 @@ tbody tr:hover {
         margin-left: 0;
 
         width: 100%;
+        max-width: 100%;
 
-        padding: 15px;
+        padding: 10px;
+
+        min-width: 0;
     }
 
     .page-header {
-        padding: 20px;
+        padding: 16px;
 
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+
+        width: 100%;
     }
 
     .page-header h1 {
-        font-size: 23px;
+        font-size: 22px;
+
+        overflow-wrap: anywhere;
+    }
+
+    .page-header p {
+        font-size: 12px;
+
+        line-height: 1.35;
+
+        overflow-wrap: anywhere;
     }
 
     .cards {
@@ -511,27 +584,55 @@ tbody tr:hover {
     }
 
     .card {
-        padding: 20px;
+        padding: 18px;
+    }
+
+    .card-value {
+        font-size: 22px;
     }
 
     .summary {
-        padding: 15px 20px;
+        padding: 14px;
     }
 
     .summary-row {
-        gap: 15px;
+        gap: 10px;
 
-        font-size: 14px;
+        font-size: 13px;
+
+        flex-wrap: wrap;
     }
 
     .section-card {
-        padding: 18px;
+        padding: 14px;
 
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+
+        width: 100%;
+    }
+
+    .section-title {
+        margin-bottom: 16px;
+    }
+
+    .section-title h2 {
+        font-size: 18px;
+
+        line-height: 1.2;
+    }
+
+    .section-title p {
+        font-size: 12px;
+
+        line-height: 1.35;
     }
 
     .form-grid {
         grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        width: 100%;
     }
 
     .form-span-2 {
@@ -540,10 +641,29 @@ tbody tr:hover {
 
     .form-actions {
         display: block;
+
+        width: 100%;
     }
 
     .button-primary {
         width: 100%;
+
+        padding: 12px 10px;
+
+        font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 14px;
+    }
+
+    .table-wrapper {
+        max-width: 100%;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
     }
 
 }

@@ -7,6 +7,61 @@ O projeto utiliza versionamento semântico no formato:
 MAJOR.MINOR.PATCH
 
 ---
+## [0.6.0] - 2026-09-21
+
+### Adicionado
+- Aplicação Web completa utilizando Flask.
+- Dashboard Web integrado aos mesmos Services utilizados pela CLI e GUI.
+- Cadastro e consulta de alunos pela Web.
+- Cadastro e consulta de planos pela Web.
+- Criação e consulta de assinaturas pela Web.
+- Geração de cobranças pela Web.
+- Registro de pagamentos pela Web.
+- Histórico financeiro pela Web.
+- Controle de acesso pela Web.
+- Registro de acessos autorizados e negados.
+- Relatórios administrativos pela Web.
+- Relatório geral.
+- Relatório financeiro.
+- Relatório de acessos.
+- Ranking de frequência.
+- Relatório de planos.
+- Exportação JSON pela Web.
+- Autenticação administrativa para exportação JSON.
+- Download do arquivo JSON pelo navegador.
+- Interface responsiva para dispositivos móveis.
+- Validação específica em resolução 320 x 800.
+- Servidor Flask acessível pela rede local.
+- Acesso à aplicação através de dispositivos móveis.
+- Geração dinâmica de QR Code.
+- Página Web dedicada ao QR Code.
+- Identificação automática do endereço local para geração do QR Code.
+- Testes automatizados da camada Web.
+- Teste de integração do fluxo principal:
+  aluno → plano → assinatura → cobrança → pagamento → acesso.
+- Teste automatizado das principais rotas Web.
+- Teste automatizado da geração do QR Code.
+- Teste de cadastro de aluno pela Web.
+- Teste de duplicidade de plano pela Web.
+
+### Alterado
+- Servidor Flask configurado para aceitar conexões pela rede local através de `0.0.0.0`.
+- Interface mobile refinada para evitar vazamento horizontal de conteúdo.
+- Menu lateral passa para menu superior em telas pequenas.
+- Cards e formulários passam para uma coluna em dispositivos móveis.
+- Tabelas utilizam rolagem horizontal própria em telas menores.
+- Arquitetura passou a possuir três interfaces funcionais compartilhando a mesma camada de Services e o mesmo banco SQLite.
+
+### Testes
+- Suíte automatizada ampliada de 30 para 35 testes.
+- 35 testes automatizados executados com sucesso.
+- CLI validada após implementação da Web.
+- GUI validada após implementação da Web.
+- Aplicação Web validada em desktop.
+- Aplicação Web validada em resolução 320 x 800.
+- Aplicação Web validada em dispositivo móvel real.
+- QR Code validado através de acesso pelo celular.
+
 
 ## [0.5.1] - 2026-09-21
 
