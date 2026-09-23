@@ -73,7 +73,10 @@ Alunos | SmartFit Gym Manager
                 type="text"
                 id="cpf"
                 name="cpf"
-                placeholder="00000000000"
+                placeholder="000.000.000-00"
+                maxlength="14"
+                inputmode="numeric"
+                autocomplete="off"
                 required
             >
 
@@ -259,5 +262,58 @@ Alunos | SmartFit Gym Manager
     </div>
 
 </section>
+
+
+<script>
+    const campoCpf = document.getElementById(
+        "cpf"
+    );
+
+    campoCpf.addEventListener(
+        "input",
+        function () {
+            const digitos = (
+                campoCpf
+                    .value
+                    .replace(/\D/g, "")
+                    .slice(0, 11)
+            );
+
+            let cpfFormatado = digitos;
+
+            if (digitos.length > 9) {
+                cpfFormatado = (
+                    digitos.slice(0, 3)
+                    + "."
+                    + digitos.slice(3, 6)
+                    + "."
+                    + digitos.slice(6, 9)
+                    + "-"
+                    + digitos.slice(9, 11)
+                );
+            }
+
+            else if (digitos.length > 6) {
+                cpfFormatado = (
+                    digitos.slice(0, 3)
+                    + "."
+                    + digitos.slice(3, 6)
+                    + "."
+                    + digitos.slice(6)
+                );
+            }
+
+            else if (digitos.length > 3) {
+                cpfFormatado = (
+                    digitos.slice(0, 3)
+                    + "."
+                    + digitos.slice(3)
+                );
+            }
+
+            campoCpf.value = cpfFormatado;
+        }
+    );
+</script>
 
 {% endblock %}

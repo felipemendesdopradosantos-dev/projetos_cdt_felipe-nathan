@@ -123,7 +123,7 @@ def test_cadastro_aluno_pela_web(
             FROM alunos
             WHERE cpf = ?
             """,
-            ("12345678901",),
+            ("123.456.789-01",),
         ).fetchone()
 
         assert aluno is not None
@@ -131,6 +131,11 @@ def test_cadastro_aluno_pela_web(
         assert (
             aluno["nome"]
             == "Aluno Web Teste"
+        )
+
+        assert (
+            aluno["cpf"]
+            == "123.456.789-01"
         )
 
     finally:
@@ -206,7 +211,7 @@ def test_fluxo_principal_web(
         "/alunos",
         data={
             "nome": "Aluno Fluxo Web",
-            "cpf": "98765432100",
+            "cpf": "123.456.789-01",
             "data_nascimento": "1999-08-15",
             "email": "fluxo@email.com",
             "telefone": "11988888888",
@@ -214,9 +219,21 @@ def test_fluxo_principal_web(
         follow_redirects=True,
     )
 
+    texto_aluno = (
+        resposta_aluno
+        .get_data(
+            as_text=True
+        )
+    )
+
     assert (
         resposta_aluno.status_code
         == 200
+    )
+
+    assert (
+        "Aluno cadastrado com sucesso"
+        in texto_aluno
     )
 
     # ==========================================
@@ -250,7 +267,7 @@ def test_fluxo_principal_web(
             FROM alunos
             WHERE cpf = ?
             """,
-            ("98765432100",),
+            ("123.456.789-01",),
         ).fetchone()
 
         plano = conexao.execute(

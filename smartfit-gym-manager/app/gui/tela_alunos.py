@@ -10,7 +10,10 @@ from app.services.aluno_service import (
 
 
 class TelaAlunos:
-    def __init__(self, container):
+    def __init__(
+        self,
+        container,
+    ):
         self.container = container
 
         self.criar_tela()
@@ -151,9 +154,14 @@ class TelaAlunos:
 
         self.entry_cpf = self.criar_campo(
             formulario,
-            "CPF",
+            "CPF (000.000.000-00)",
             linha=1,
             coluna=2,
+        )
+
+        self.entry_cpf.bind(
+            "<KeyRelease>",
+            self.aplicar_mascara_cpf,
         )
 
         self.entry_data_nascimento = (
@@ -173,11 +181,13 @@ class TelaAlunos:
             coluna_span=2,
         )
 
-        self.entry_telefone = self.criar_campo(
-            formulario,
-            "Telefone",
-            linha=2,
-            coluna=2,
+        self.entry_telefone = (
+            self.criar_campo(
+                formulario,
+                "Telefone",
+                linha=2,
+                coluna=2,
+            )
         )
 
         botao_cadastrar = tk.Button(
@@ -262,6 +272,55 @@ class TelaAlunos:
         )
 
         return entry
+
+    def aplicar_mascara_cpf(
+        self,
+        event=None,
+    ):
+        digitos = "".join(
+            caractere
+            for caractere
+            in self.entry_cpf.get()
+            if caractere.isdigit()
+        )[:11]
+
+        if len(digitos) <= 3:
+            cpf_formatado = digitos
+
+        elif len(digitos) <= 6:
+            cpf_formatado = (
+                f"{digitos[:3]}."
+                f"{digitos[3:]}"
+            )
+
+        elif len(digitos) <= 9:
+            cpf_formatado = (
+                f"{digitos[:3]}."
+                f"{digitos[3:6]}."
+                f"{digitos[6:]}"
+            )
+
+        else:
+            cpf_formatado = (
+                f"{digitos[:3]}."
+                f"{digitos[3:6]}."
+                f"{digitos[6:9]}-"
+                f"{digitos[9:]}"
+            )
+
+        if (
+            self.entry_cpf.get()
+            != cpf_formatado
+        ):
+            self.entry_cpf.delete(
+                0,
+                tk.END,
+            )
+
+            self.entry_cpf.insert(
+                0,
+                cpf_formatado,
+            )
 
     def criar_lista(self):
         area_lista = tk.Frame(
@@ -390,7 +449,9 @@ class TelaAlunos:
         )
 
         self.tabela.configure(
-            yscrollcommand=barra_vertical.set
+            yscrollcommand=(
+                barra_vertical.set
+            )
         )
 
         self.tabela.pack(
@@ -421,8 +482,17 @@ class TelaAlunos:
             )
 
     def cadastrar_novo_aluno(self):
-        nome = self.entry_nome.get().strip()
-        cpf = self.entry_cpf.get().strip()
+        nome = (
+            self.entry_nome
+            .get()
+            .strip()
+        )
+
+        cpf = (
+            self.entry_cpf
+            .get()
+            .strip()
+        )
 
         data_nascimento = (
             self.entry_data_nascimento
@@ -430,7 +500,11 @@ class TelaAlunos:
             .strip()
         )
 
-        email = self.entry_email.get().strip()
+        email = (
+            self.entry_email
+            .get()
+            .strip()
+        )
 
         telefone = (
             self.entry_telefone
@@ -461,8 +535,10 @@ class TelaAlunos:
             aluno = Aluno(
                 nome=nome,
                 cpf=cpf,
-                data_nascimento=self.converter_data(
-                    data_nascimento
+                data_nascimento=(
+                    self.converter_data(
+                        data_nascimento
+                    )
                 ),
                 email=email,
                 telefone=telefone,
@@ -520,7 +596,10 @@ class TelaAlunos:
         self.entry_nome.focus()
 
     def carregar_alunos(self):
-        for item in self.tabela.get_children():
+        for item in (
+            self.tabela
+            .get_children()
+        ):
             self.tabela.delete(
                 item
             )

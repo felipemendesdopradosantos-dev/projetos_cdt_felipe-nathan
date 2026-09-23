@@ -39,10 +39,25 @@ def test_cadastrar_aluno(
         aluno
     )
 
-    assert aluno_cadastrado.id is not None
-    assert aluno_cadastrado.nome == "Aluno Teste"
-    assert aluno_cadastrado.cpf == "12345678901"
-    assert aluno_cadastrado.status == "ativo"
+    assert (
+        aluno_cadastrado.id
+        is not None
+    )
+
+    assert (
+        aluno_cadastrado.nome
+        == "Aluno Teste"
+    )
+
+    assert (
+        aluno_cadastrado.cpf
+        == "123.456.789-01"
+    )
+
+    assert (
+        aluno_cadastrado.status
+        == "ativo"
+    )
 
 
 def test_buscar_aluno_por_id_e_cpf(
@@ -57,17 +72,48 @@ def test_buscar_aluno_por_id_e_cpf(
     )
 
     aluno_por_cpf = buscar_aluno_por_cpf(
-        aluno.cpf
+        "12345678901"
+    )
+
+    aluno_por_cpf_formatado = (
+        buscar_aluno_por_cpf(
+            "123.456.789-01"
+        )
     )
 
     assert aluno_por_id is not None
+
     assert aluno_por_cpf is not None
 
-    assert aluno_por_id.id == aluno.id
-    assert aluno_por_cpf.id == aluno.id
+    assert (
+        aluno_por_cpf_formatado
+        is not None
+    )
 
-    assert aluno_por_id.nome == "Aluno Teste"
-    assert aluno_por_cpf.cpf == "12345678901"
+    assert (
+        aluno_por_id.id
+        == aluno.id
+    )
+
+    assert (
+        aluno_por_cpf.id
+        == aluno.id
+    )
+
+    assert (
+        aluno_por_cpf_formatado.id
+        == aluno.id
+    )
+
+    assert (
+        aluno_por_id.nome
+        == "Aluno Teste"
+    )
+
+    assert (
+        aluno_por_cpf.cpf
+        == "123.456.789-01"
+    )
 
 
 def test_listar_alunos(
@@ -113,7 +159,7 @@ def test_nao_permite_cpf_duplicado(
 
     segundo_aluno = criar_aluno_teste(
         nome="Segundo Aluno",
-        cpf="33333333333",
+        cpf="333.333.333-33",
         email="segundo@teste.com",
     )
 
@@ -121,7 +167,9 @@ def test_nao_permite_cpf_duplicado(
         primeiro_aluno
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError
+    ):
         cadastrar_aluno(
             segundo_aluno
         )
@@ -146,7 +194,57 @@ def test_nao_permite_email_duplicado(
         primeiro_aluno
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError
+    ):
         cadastrar_aluno(
             segundo_aluno
+        )
+
+
+def test_nao_permite_cpf_com_menos_de_11_digitos(
+    banco_teste,
+):
+    aluno = criar_aluno_teste(
+        cpf="1234567890",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="CPF inválido",
+    ):
+        cadastrar_aluno(
+            aluno
+        )
+
+
+def test_nao_permite_cpf_com_mais_de_11_digitos(
+    banco_teste,
+):
+    aluno = criar_aluno_teste(
+        cpf="123456789012",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="CPF inválido",
+    ):
+        cadastrar_aluno(
+            aluno
+        )
+
+
+def test_nao_permite_cpf_com_caracteres_invalidos(
+    banco_teste,
+):
+    aluno = criar_aluno_teste(
+        cpf="123.456.789-0A",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="CPF inválido",
+    ):
+        cadastrar_aluno(
+            aluno
         )
