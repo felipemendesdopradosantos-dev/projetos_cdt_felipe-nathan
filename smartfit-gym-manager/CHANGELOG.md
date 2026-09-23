@@ -4,12 +4,127 @@ Todas as alterações relevantes deste projeto serão documentadas neste arquivo
 
 O projeto utiliza versionamento semântico no formato:
 
+```text
 MAJOR.MINOR.PATCH
+```
 
 ---
+
+## [1.0.0] - 2026-09-22
+
+### Adicionado
+
+- Documentação final do projeto.
+- Registro dos testes realizados com usuários.
+- Arquivo `docs/testes_usuarios.md`.
+- Registro da validação por instalação limpa através de novo `git clone`.
+- Documentação da versão Web pública.
+- Documentação do executável local.
+- Documentação das limitações conhecidas do projeto.
+
+### Validado
+
+- Projeto clonado em uma nova pasta diretamente do GitHub.
+- Dependências instaladas através do `requirements.txt`.
+- CLI executada após clone limpo.
+- GUI executada após clone limpo.
+- aplicação Web executada após clone limpo.
+- 38 testes automatizados executados com sucesso após clone limpo.
+- versão Web pública validada no Render.
+- QR Code público validado através de dispositivo móvel.
+- executável Windows validado.
+- persistência SQLite validada no executável.
+- exportação JSON validada no executável.
+- aplicação validada por usuários externos ao desenvolvimento.
+
+### Alterado
+
+- Projeto promovido de versão de desenvolvimento para primeira versão estável.
+- README atualizado para refletir o estado final da aplicação.
+- Roadmap atualizado com todas as etapas principais concluídas.
+- Status do projeto atualizado para versão estável.
+
+---
+
+## [0.7.1] - 2026-09-22
+
+### Corrigido
+
+- Campo CPF passou a limitar a entrada a 11 dígitos.
+- Adicionada máscara automática no formato `000.000.000-00`.
+- CPF passou a ser padronizado antes do armazenamento.
+- Cadastro passou a aceitar CPF com ou sem máscara.
+- Busca de aluno por CPF passou a considerar CPF formatado ou não formatado.
+- Validação de duplicidade passou a impedir cadastro do mesmo CPF com representações diferentes.
+- Corrigido teste Web que ainda consultava o CPF no formato antigo.
+- Corrigido fluxo Web que consultava um CPF diferente daquele cadastrado.
+
+### Adicionado
+
+- Validação centralizada de CPF no `aluno_service.py`.
+- Máscara de CPF na interface Tkinter.
+- Máscara de CPF na aplicação Web.
+- Teste de CPF com menos de 11 dígitos.
+- Teste de CPF com mais de 11 dígitos.
+- Teste de CPF com caracteres inválidos.
+- Teste de normalização do CPF.
+- Teste de duplicidade entre CPF formatado e não formatado.
+
+### Origem da melhoria
+
+- A melhoria foi identificada durante teste realizado por usuário externo.
+- O usuário observou que o campo CPF permitia quantidade arbitrária de caracteres.
+- O feedback foi convertido em requisito e implementado nas diferentes camadas da aplicação.
+
+### Testes
+
+- Suíte automatizada ampliada de 35 para 38 testes.
+- 38 testes automatizados executados com sucesso.
+- Máscara validada manualmente na GUI.
+- Máscara validada manualmente na Web.
+- Versão publicada e validada no Render.
+
+---
+
+## [0.7.0] - 2026-09-22
+
+### Adicionado
+
+- Geração do executável Windows através de PyInstaller.
+- Executável `SmartFitGymManager.exe`.
+- Persistência do SQLite na execução através do executável.
+- Exportação JSON através do executável.
+- Compatibilidade de leitura do arquivo `VERSION` no ambiente PyInstaller.
+- Suporte à localização de recursos através de `sys._MEIPASS`.
+- Gunicorn como servidor WSGI para publicação Web.
+- Publicação da aplicação Flask no Render.
+- URL pública da aplicação.
+- QR Code funcionando através da URL pública.
+- acesso à aplicação Web por dispositivos fora da rede local.
+
+### Alterado
+
+- Caminhos de banco e exportação adaptados para execução normal e execução empacotada.
+- `requirements.txt` atualizado para publicação com Gunicorn.
+- Render configurado com diretório raiz específico do projeto dentro do repositório.
+- aplicação passou a possuir uma versão local executável e uma versão Web pública.
+
+### Validado
+
+- executável abre corretamente através de duplo clique.
+- persistência do banco validada após fechar e reabrir o executável.
+- exportação JSON validada no executável.
+- aplicação Web publicada com sucesso no Render.
+- Dashboard público validado.
+- QR Code público validado em dispositivo móvel.
+- aplicação acessada através da Internet.
+
+---
+
 ## [0.6.0] - 2026-09-21
 
 ### Adicionado
+
 - Aplicação Web completa utilizando Flask.
 - Dashboard Web integrado aos mesmos Services utilizados pela CLI e GUI.
 - Cadastro e consulta de alunos pela Web.
@@ -45,6 +160,7 @@ MAJOR.MINOR.PATCH
 - Teste de duplicidade de plano pela Web.
 
 ### Alterado
+
 - Servidor Flask configurado para aceitar conexões pela rede local através de `0.0.0.0`.
 - Interface mobile refinada para evitar vazamento horizontal de conteúdo.
 - Menu lateral passa para menu superior em telas pequenas.
@@ -53,6 +169,7 @@ MAJOR.MINOR.PATCH
 - Arquitetura passou a possuir três interfaces funcionais compartilhando a mesma camada de Services e o mesmo banco SQLite.
 
 ### Testes
+
 - Suíte automatizada ampliada de 30 para 35 testes.
 - 35 testes automatizados executados com sucesso.
 - CLI validada após implementação da Web.
@@ -62,10 +179,12 @@ MAJOR.MINOR.PATCH
 - Aplicação Web validada em dispositivo móvel real.
 - QR Code validado através de acesso pelo celular.
 
+---
 
 ## [0.5.1] - 2026-09-21
 
 ### Corrigido
+
 - Corrigida a validação de nomes duplicados no cadastro de planos.
 - Nomes de planos agora são comparados ignorando diferenças entre letras maiúsculas e minúsculas.
 - Espaços no início e no final dos nomes dos planos são desconsiderados na validação e na busca.
@@ -74,14 +193,18 @@ MAJOR.MINOR.PATCH
 - Corrigida a duplicidade identificada durante os testes da interface Web.
 
 ### Testes
+
 - Adicionados testes de regressão para nomes de planos com diferenças de capitalização.
 - Adicionado teste para busca de planos ignorando capitalização e espaços.
 - Suíte automatizada ampliada de 28 para 30 testes.
 - 30 testes automatizados executados com sucesso.
 
+---
+
 ## [0.5.0] - 2026-09-21
 
 ### Adicionado
+
 - Interface gráfica completa utilizando Tkinter.
 - Dashboard gráfico conectado ao banco SQLite.
 - Tela de gerenciamento de alunos.
@@ -104,6 +227,7 @@ MAJOR.MINOR.PATCH
 - Máscara de senha na autenticação gráfica.
 
 ### Alterado
+
 - Aplicação passou a possuir duas interfaces funcionais: CLI e GUI.
 - GUI passou a reutilizar os mesmos Services utilizados pela CLI.
 - Navegação gráfica organizada através de menu lateral.
@@ -111,12 +235,14 @@ MAJOR.MINOR.PATCH
 - README atualizado para refletir a conclusão da interface gráfica.
 
 ### Testes
+
 - Interface gráfica validada manualmente.
 - CLI executada novamente após a implementação da GUI.
-- Dependências do projeto validadas através do requirements.txt.
+- Dependências do projeto validadas através do `requirements.txt`.
 - Suíte automatizada executada após a implementação da GUI.
 - 28 testes automatizados executados com sucesso.
 
+---
 
 ## [0.4.0] - 2026-09-21
 
