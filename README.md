@@ -1,14 +1,14 @@
-# SmartFit Gym Manager
+# 🏋️ SmartFit Gym Manager
 
 Sistema de gerenciamento de academia desenvolvido em Python como projeto final de programação.
 
-**Versão atual: `0.6.0`**
+**Versão atual: `1.0.0`**
 
-> Projeto acadêmico independente, sem vínculo oficial com a Smart Fit.
+> 📌 Projeto acadêmico independente, sem vínculo oficial com a Smart Fit.
 
 ---
 
-## Sobre o projeto
+## 📖 Sobre o projeto
 
 O **SmartFit Gym Manager** é uma aplicação desenvolvida para automatizar processos comuns de gerenciamento de uma academia.
 
@@ -25,11 +25,12 @@ O sistema reúne funcionalidades relacionadas a:
 - relatórios;
 - geração de dados fictícios;
 - exportação de dados;
-- acesso Web;
+- aplicação Web;
 - interface responsiva;
-- acesso por QR Code.
+- QR Code;
+- executável local.
 
-A arquitetura foi estruturada para permitir que diferentes interfaces utilizem as mesmas regras de negócio e o mesmo banco de dados.
+A arquitetura permite que diferentes interfaces utilizem as mesmas regras de negócio e o mesmo banco de dados.
 
 ```text
                  CLI
@@ -38,18 +39,20 @@ A arquitetura foi estruturada para permitir que diferentes interfaces utilizem a
 GUI ───────── Services ───────── WEB
                   │
                   ↓
-               SQLite
+                SQLite
 ```
 
-Atualmente o sistema possui três interfaces funcionais:
+O sistema possui três interfaces funcionais:
 
 - CLI;
 - GUI com Tkinter;
 - aplicação Web com Flask.
 
+Também existe uma versão executável da interface gráfica criada com PyInstaller e uma versão Web publicada no Render.
+
 ---
 
-# Objetivos
+# 🎯 Objetivos
 
 O projeto tem como objetivo desenvolver uma aplicação capaz de:
 
@@ -71,14 +74,16 @@ O projeto tem como objetivo desenvolver uma aplicação capaz de:
 - disponibilizar interfaces CLI, GUI e Web;
 - funcionar em dispositivos móveis;
 - disponibilizar acesso através de QR Code;
-- disponibilizar uma versão executável;
-- disponibilizar a aplicação Web através de um serviço de hospedagem.
+- disponibilizar uma versão executável local;
+- disponibilizar uma versão Web pública;
+- aplicar validações de entrada;
+- realizar testes automatizados e testes com usuários.
 
 ---
 
-# Tecnologias
+# 🛠️ Tecnologias
 
-## Implementadas
+## ✅ Implementadas
 
 - Python
 - SQLite
@@ -91,15 +96,15 @@ O projeto tem como objetivo desenvolver uma aplicação capaz de:
 - CSS
 - QR Code
 - Pillow
-
-## Próximas etapas
-
 - PyInstaller
+- Gunicorn
 - Render
+- Git
+- GitHub
 
 ---
 
-# Arquitetura
+# 🏗️ Arquitetura
 
 O projeto utiliza separação de responsabilidades entre diferentes camadas.
 
@@ -116,7 +121,7 @@ Models
 SQLite
 ```
 
-## Interfaces
+## 🖥️ Interfaces
 
 Existem três interfaces funcionais:
 
@@ -128,7 +133,7 @@ WEB
 
 Todas reutilizam a mesma camada de Services.
 
-## Models
+## 📦 Models
 
 Representam as principais entidades do sistema:
 
@@ -141,7 +146,7 @@ Representam as principais entidades do sistema:
 - Treino
 - Usuário
 
-## Services
+## ⚙️ Services
 
 Contêm as regras de negócio e operações realizadas pelo sistema.
 
@@ -158,15 +163,16 @@ Entre suas responsabilidades estão:
 - geração de relatórios;
 - geração de dados fictícios;
 - autenticação administrativa;
-- exportação JSON.
+- exportação JSON;
+- validação e padronização de CPF.
 
-## Database
+## 🗄️ Database
 
-Responsável pela conexão e criação da estrutura do banco SQLite.
+Responsável pela conexão, persistência e criação da estrutura do banco SQLite.
 
 ---
 
-# Estrutura do projeto
+# 📁 Estrutura do projeto
 
 ```text
 smartfit-gym-manager/
@@ -246,7 +252,8 @@ smartfit-gym-manager/
 │
 ├── docs/
 │   ├── papeis_projeto.md
-│   └── requisitos.md
+│   ├── requisitos.md
+│   └── testes_usuarios.md
 │
 ├── tests/
 │   ├── conftest.py
@@ -270,7 +277,7 @@ smartfit-gym-manager/
 
 ---
 
-# Banco de dados
+# 🗃️ Banco de dados
 
 O sistema utiliza **SQLite** como banco de dados local.
 
@@ -282,7 +289,7 @@ data/academia.db
 
 O banco é criado automaticamente durante a inicialização da aplicação.
 
-## Tabelas
+## 📋 Tabelas
 
 Existem nove tabelas principais:
 
@@ -300,7 +307,7 @@ usuarios
 
 ---
 
-# Alunos
+# 👤 Alunos
 
 O sistema permite:
 
@@ -310,7 +317,28 @@ O sistema permite:
 - buscar aluno por CPF;
 - controlar status;
 - impedir CPF duplicado;
-- impedir e-mail duplicado.
+- impedir e-mail duplicado;
+- validar a quantidade de dígitos do CPF;
+- aplicar máscara de CPF;
+- padronizar o CPF antes do armazenamento.
+
+O CPF possui o padrão:
+
+```text
+000.000.000-00
+```
+
+O sistema aceita a entrada com 11 dígitos e realiza a normalização.
+
+Exemplo:
+
+```text
+12345678901
+        ↓
+123.456.789-01
+```
+
+A regra está centralizada na camada de Services, protegendo as diferentes interfaces.
 
 O gerenciamento de alunos está disponível pela:
 
@@ -322,7 +350,7 @@ WEB
 
 ---
 
-# Planos
+# 🪪 Planos
 
 O sistema permite:
 
@@ -356,7 +384,7 @@ LOWER(TRIM(nome))
 
 ---
 
-# Assinaturas
+# 📝 Assinaturas
 
 O sistema permite:
 
@@ -379,7 +407,7 @@ A criação de assinaturas está disponível nas interfaces CLI, GUI e Web.
 
 ---
 
-# Pagamentos
+# 💳 Pagamentos
 
 O módulo financeiro permite:
 
@@ -409,7 +437,7 @@ A aplicação Web permite gerar cobranças, registrar pagamentos e consultar o h
 
 ---
 
-# Controle de acesso
+# 🚪 Controle de acesso
 
 O acesso do aluno é avaliado automaticamente.
 
@@ -437,16 +465,20 @@ Registro no histórico
 
 O sistema registra tanto acessos autorizados quanto negados.
 
-Exemplos:
+Exemplo:
 
 ```text
 ACESSO AUTORIZADO
 ```
 
+ou:
+
 ```text
 ACESSO NEGADO
 Motivo: Aluno sem assinatura ativa.
 ```
+
+ou:
 
 ```text
 ACESSO NEGADO
@@ -457,7 +489,7 @@ O controle de acesso está disponível pela CLI, GUI e Web.
 
 ---
 
-# Exercícios e treinos
+# 🏋️ Exercícios e treinos
 
 O sistema possui gerenciamento de exercícios e fichas de treino.
 
@@ -492,11 +524,11 @@ Descanso: 90 segundos
 
 ---
 
-# Relatórios
+# 📊 Relatórios
 
-O sistema possui quatro categorias principais.
+O sistema possui quatro categorias principais de relatórios.
 
-## Relatório geral
+## 📌 Relatório geral
 
 Apresenta:
 
@@ -505,7 +537,7 @@ Apresenta:
 - assinaturas ativas;
 - planos ativos.
 
-## Relatório financeiro
+## 💰 Relatório financeiro
 
 Apresenta:
 
@@ -516,7 +548,7 @@ Apresenta:
 - quantidade de pagamentos pendentes;
 - quantidade de pagamentos atrasados.
 
-## Relatório de acessos
+## 🚶 Relatório de acessos
 
 Apresenta:
 
@@ -525,7 +557,7 @@ Apresenta:
 - acessos negados;
 - ranking de frequência.
 
-## Relatório de planos
+## 🪪 Relatório de planos
 
 Apresenta:
 
@@ -537,7 +569,7 @@ Os mesmos Services de relatório são utilizados pela CLI, GUI e Web.
 
 ---
 
-# Faker
+# 🧪 Faker
 
 O projeto utiliza **Faker** para geração automática de dados fictícios.
 
@@ -552,11 +584,11 @@ Os dados são armazenados no mesmo SQLite utilizado pelo restante da aplicação
 
 ---
 
-# Exportação JSON
+# 📤 Exportação JSON
 
 O banco pode ser exportado para JSON.
 
-Arquivos são armazenados em:
+Os arquivos são armazenados em:
 
 ```text
 data/exports/
@@ -565,7 +597,7 @@ data/exports/
 Exemplo:
 
 ```text
-academia_20260921_220000.json
+academia_20260922_220000.json
 ```
 
 A exportação contém:
@@ -601,7 +633,7 @@ Na Web, além de salvar a cópia local, o arquivo é enviado para download pelo 
 
 ---
 
-# Usuário administrador
+# 🔐 Usuário administrador
 
 A exportação JSON é protegida por autenticação.
 
@@ -618,67 +650,59 @@ O sistema armazena um hash utilizado para validação.
 
 Na CLI e na GUI a senha é mascarada.
 
-Na Web é utilizado:
+Na Web é utilizado um campo do tipo:
 
 ```html
 <input type="password">
 ```
 
-> As credenciais padrão existem para fins acadêmicos. Uma aplicação real deve utilizar credenciais configuráveis e mecanismos específicos para armazenamento seguro de senhas.
+> ⚠️ As credenciais padrão existem para fins acadêmicos. Uma aplicação real deve utilizar credenciais configuráveis e mecanismos específicos para armazenamento seguro de senhas.
 
 ---
 
-# Interface CLI
+# 💻 Interface CLI
 
 A CLI representa a primeira interface funcional do projeto.
 
-## Executar
+## ▶️ Executar
 
 ```bash
 py main.py
 ```
 
-## Menu principal
+## 📋 Menu principal
 
 ```text
 1  - Cadastrar aluno
 2  - Listar alunos
-
 3  - Cadastrar plano
 4  - Listar planos
-
 5  - Criar assinatura
 6  - Listar assinaturas
-
 7  - Gerar cobrança
 8  - Listar pagamentos
 9  - Registrar pagamento
-
 10 - Registrar acesso
 11 - Histórico de acessos
-
 12 - Cadastrar exercício
 13 - Listar exercícios
-
 14 - Criar treino
 15 - Listar treinos de um aluno
 16 - Adicionar exercício ao treino
 17 - Visualizar ficha de treino
-
 18 - Exportar banco para JSON
 19 - Gerar dados fictícios com Faker
 20 - Relatórios
-
 0  - Sair
 ```
 
 ---
 
-# Interface GUI
+# 🖥️ Interface GUI
 
 A segunda interface utiliza **Tkinter**.
 
-## Executar
+## ▶️ Executar
 
 ```bash
 py -m app.gui.janela_principal
@@ -702,7 +726,52 @@ A GUI utiliza os mesmos Services e o mesmo SQLite da CLI.
 
 ---
 
-# Interface Web
+# 📦 Executável local
+
+A interface gráfica também pode ser distribuída como executável do Windows utilizando PyInstaller.
+
+Arquivo gerado:
+
+```text
+SmartFitGymManager.exe
+```
+
+O executável abre diretamente a interface gráfica sem exigir a execução manual de comandos Python.
+
+## 🛠️ Gerar o executável
+
+Na raiz do projeto:
+
+```bash
+py -m PyInstaller --noconfirm --clean --onefile --windowed --paths "." --name SmartFitGymManager --add-data "VERSION;." app/gui/janela_principal.py
+```
+
+Resultado:
+
+```text
+dist/
+└── SmartFitGymManager.exe
+```
+
+Durante a execução, o banco SQLite e os arquivos JSON persistentes são armazenados em:
+
+```text
+dist/data/
+```
+
+O executável foi validado quanto a:
+
+- abertura da GUI;
+- persistência do banco SQLite;
+- cadastro de dados;
+- fechamento e reabertura da aplicação;
+- exportação JSON.
+
+> ⚠️ Em computadores com políticas rígidas de segurança do Windows, executáveis locais sem assinatura digital podem ser bloqueados pelo Smart App Control.
+
+---
+
+# 🌐 Interface Web
 
 A terceira interface utiliza:
 
@@ -712,7 +781,7 @@ HTML
 CSS
 ```
 
-## Executar
+## ▶️ Executar localmente
 
 ```bash
 py -m app.web.app_web
@@ -741,7 +810,43 @@ http://IP_DO_COMPUTADOR:5000
 
 ---
 
-# Funcionalidades Web
+# ☁️ Versão Web pública
+
+A aplicação está publicada no Render.
+
+Endereço:
+
+```text
+https://smartfit-gym-manager.onrender.com
+```
+
+Arquitetura da publicação:
+
+```text
+GitHub
+   ↓
+Render
+   ↓
+Gunicorn
+   ↓
+Flask
+   ↓
+SmartFit Gym Manager
+```
+
+O Render realiza deploy automático a partir da branch principal do repositório.
+
+## ⚠️ Observação sobre SQLite no Render
+
+O SQLite é adequado para o objetivo acadêmico e para a execução local.
+
+Na hospedagem gratuita do Render, o sistema de arquivos não deve ser tratado como armazenamento permanente de produção. Dados criados na versão online podem ser perdidos após determinadas reinicializações ou novos deploys.
+
+Para uma aplicação de produção, seria recomendado utilizar um banco persistente externo, como PostgreSQL.
+
+---
+
+# 🌍 Funcionalidades Web
 
 A versão Web possui:
 
@@ -757,7 +862,7 @@ A versão Web possui:
 
 ---
 
-# Dashboard Web
+# 📊 Dashboard Web
 
 Apresenta:
 
@@ -774,7 +879,7 @@ Apresenta:
 
 ---
 
-# Alunos Web
+# 👤 Alunos Web
 
 Rota:
 
@@ -784,9 +889,17 @@ Rota:
 
 Permite cadastrar e consultar alunos diretamente pelo navegador.
 
+O campo CPF possui máscara automática:
+
+```text
+000.000.000-00
+```
+
+A regra de validação também existe no backend.
+
 ---
 
-# Planos Web
+# 🪪 Planos Web
 
 Rota:
 
@@ -800,7 +913,7 @@ As regras de duplicidade do `plano_service.py` também são aplicadas na Web.
 
 ---
 
-# Assinaturas Web
+# 📝 Assinaturas Web
 
 Rota:
 
@@ -819,7 +932,7 @@ Permite:
 
 ---
 
-# Pagamentos Web
+# 💳 Pagamentos Web
 
 Rota:
 
@@ -838,7 +951,7 @@ Permite:
 
 ---
 
-# Controle de Acesso Web
+# 🚪 Controle de Acesso Web
 
 Rota:
 
@@ -872,7 +985,7 @@ Todas as tentativas são registradas.
 
 ---
 
-# Relatórios Web
+# 📈 Relatórios Web
 
 Rota:
 
@@ -892,7 +1005,7 @@ Planos
 
 ---
 
-# Exportação JSON Web
+# 📤 Exportação JSON Web
 
 Rota:
 
@@ -902,7 +1015,7 @@ Rota:
 
 Exige autenticação administrativa antes da exportação.
 
-Após autenticação correta:
+Fluxo:
 
 ```text
 SQLite
@@ -918,7 +1031,7 @@ download pelo navegador
 
 ---
 
-# Interface responsiva
+# 📱 Interface responsiva
 
 A aplicação Web possui layout responsivo.
 
@@ -942,7 +1055,7 @@ A interface foi validada através das ferramentas de dispositivo do navegador e 
 
 ---
 
-# QR Code
+# 📲 QR Code
 
 A aplicação possui uma página dedicada ao QR Code.
 
@@ -958,16 +1071,16 @@ Imagem:
 /qr/imagem
 ```
 
-O endereço local do computador é identificado automaticamente.
+Na execução local, o sistema identifica o endereço da aplicação na rede.
 
-Fluxo:
+Na versão publicada, o QR Code utiliza a URL pública.
+
+Fluxo online:
 
 ```text
-Flask
+Render
   ↓
-IP local
-  ↓
-URL da aplicação
+URL pública
   ↓
 QR Code
   ↓
@@ -976,45 +1089,44 @@ Celular
 Dashboard
 ```
 
-O celular deve estar conectado à mesma rede local do computador durante a execução local.
-
 O QR Code foi validado com sucesso em dispositivo móvel real.
 
 ---
 
-# Instalação
+# 🚀 Instalação
 
-## 1. Clonar o repositório
+## 1️⃣ Clonar o repositório
 
 ```bash
-git clone URL_DO_REPOSITORIO
+git clone https://github.com/nathandiasc/projeto_cdt.git
 ```
 
-## 2. Entrar no projeto
+## 2️⃣ Entrar no projeto
 
 ```bash
+cd projeto_cdt
 cd smartfit-gym-manager
 ```
 
-## 3. Instalar dependências
+## 3️⃣ Instalar dependências
 
 ```bash
 py -m pip install -r requirements.txt
 ```
 
-## 4. Executar CLI
+## 4️⃣ Executar CLI
 
 ```bash
 py main.py
 ```
 
-## 5. Executar GUI
+## 5️⃣ Executar GUI
 
 ```bash
 py -m app.gui.janela_principal
 ```
 
-## 6. Executar Web
+## 6️⃣ Executar Web
 
 ```bash
 py -m app.web.app_web
@@ -1022,9 +1134,9 @@ py -m app.web.app_web
 
 ---
 
-# Dependências
+# 📦 Dependências
 
-As dependências são registradas no:
+As dependências são registradas em:
 
 ```text
 requirements.txt
@@ -1038,6 +1150,7 @@ Faker
 qrcode[pil]
 pytest
 pyinstaller
+gunicorn
 ```
 
 Bibliotecas como estas fazem parte do Python ou da instalação padrão:
@@ -1054,23 +1167,23 @@ tkinter
 
 ---
 
-# Testes automatizados
+# 🧪 Testes automatizados
 
 O projeto utiliza **Pytest**.
 
-## Executar
+## ▶️ Executar
 
 ```bash
-py -m pytest -v
+py -m pytest -q
 ```
 
-Resultado atual:
+Resultado final validado:
 
 ```text
-35 passed
+38 passed
 ```
 
-Os testes utilizam bancos SQLite temporários para não alterar:
+Os testes utilizam bancos SQLite temporários para não alterar o banco principal:
 
 ```text
 data/academia.db
@@ -1078,16 +1191,51 @@ data/academia.db
 
 ---
 
-# Testes da camada Web
+# ✅ Cenários de testes
 
-A versão `0.6.0` adicionou testes específicos da aplicação Flask.
+A suíte inclui cenários relacionados a:
 
-Foram adicionados testes para:
+- criação das tabelas;
+- autenticação;
+- cadastro de alunos;
+- CPF duplicado;
+- e-mail duplicado;
+- validação de CPF;
+- formatação de CPF;
+- CPF com menos de 11 dígitos;
+- CPF com mais de 11 dígitos;
+- CPF com caracteres inválidos;
+- planos;
+- planos duplicados;
+- normalização de nomes;
+- pagamentos;
+- inadimplência;
+- acessos;
+- relatórios;
+- rotas Flask;
+- QR Code;
+- cadastro Web;
+- integração Web.
+
+Resultado:
+
+```text
+38 passed
+```
+
+---
+
+# 🌐 Testes da camada Web
+
+Foram implementados testes específicos da aplicação Flask.
+
+Os testes verificam:
 
 - abertura das principais páginas;
 - geração da imagem do QR Code;
 - cadastro de aluno pela Web;
-- bloqueio de plano duplicado pela Web;
+- normalização e armazenamento do CPF;
+- bloqueio de plano duplicado;
 - fluxo principal integrado da aplicação.
 
 O teste de integração executa:
@@ -1110,35 +1258,81 @@ AUTORIZADO
 
 ---
 
-# Cenários de testes
+# 👥 Testes com usuários
 
-A suíte inclui cenários relacionados a:
+O projeto foi testado por pessoas externas ao desenvolvimento.
 
-- criação das tabelas;
-- autenticação;
-- cadastro de alunos;
-- CPF duplicado;
-- e-mail duplicado;
-- planos;
-- planos duplicados;
-- normalização de nomes;
-- pagamentos;
-- inadimplência;
-- acessos;
-- relatórios;
-- rotas Flask;
-- QR Code;
-- integração Web.
+## 🧭 Teste de usabilidade
 
-Resultado:
+Uma usuária conseguiu utilizar a aplicação sem dificuldades e considerou o site simples e intuitivo.
+
+## 🪪 Feedback sobre CPF
+
+Durante outro teste foi identificado que o campo CPF permitia quantidade arbitrária de caracteres.
+
+A partir desse feedback foram implementados:
+
+- limite de 11 dígitos;
+- máscara `000.000.000-00`;
+- validação no Service;
+- padronização antes do armazenamento;
+- prevenção de duplicidade entre CPF formatado e não formatado;
+- novos testes automatizados.
+
+O ciclo realizado foi:
 
 ```text
-35 passed
+Teste com usuário
+       ↓
+Problema identificado
+       ↓
+Refinamento do requisito
+       ↓
+Implementação
+       ↓
+Testes automatizados
+       ↓
+Deploy
+```
+
+Mais detalhes estão em:
+
+```text
+docs/testes_usuarios.md
 ```
 
 ---
 
-# Versionamento
+# 🧹 Teste de instalação limpa
+
+O projeto também foi validado após um novo `git clone`.
+
+Foram executados:
+
+```bash
+py -m pip install -r requirements.txt
+py -m pytest -q
+```
+
+Resultado:
+
+```text
+38 passed
+```
+
+Também foram abertas com sucesso:
+
+```text
+CLI
+GUI
+WEB
+```
+
+Esse teste confirmou que o repositório contém os recursos necessários para instalação e execução do projeto.
+
+---
+
+# 🏷️ Versionamento
 
 O projeto utiliza **Versionamento Semântico**:
 
@@ -1146,17 +1340,19 @@ O projeto utiliza **Versionamento Semântico**:
 MAJOR.MINOR.PATCH
 ```
 
-## PATCH
+## 🔧 PATCH
 
-Correções de bugs.
+Correções de comportamento ou bugs.
 
 Exemplo:
 
 ```text
-0.5.0 → 0.5.1
+0.7.0 → 0.7.1
 ```
 
-## MINOR
+A versão `0.7.1` adicionou a validação e padronização do CPF após feedback de usuário.
+
+## ➕ MINOR
 
 Novas funcionalidades compatíveis.
 
@@ -1166,19 +1362,21 @@ Exemplo:
 0.5.1 → 0.6.0
 ```
 
-A versão `0.6.0` foi criada após a conclusão da aplicação Web funcional.
+A versão `0.6.0` marcou a conclusão da aplicação Web.
 
-## MAJOR
+A versão `0.7.0` consolidou executável local e preparação/publicação da aplicação Web.
 
-Mudanças estruturais importantes ou lançamento da versão estável.
+## 🚀 MAJOR
 
-Exemplo:
+Lançamento estável ou mudança estrutural relevante.
 
 ```text
-0.9.0 → 1.0.0
+0.7.1 → 1.0.0
 ```
 
-A versão está registrada em:
+A versão `1.0.0` representa a primeira versão estável do projeto.
+
+A versão atual é registrada em:
 
 ```text
 VERSION
@@ -1192,22 +1390,22 @@ CHANGELOG.md
 
 ---
 
-# Versão atual
+# 🎉 Versão atual
 
 ```text
-0.6.0
+1.0.0
 ```
 
-A versão `0.6.0` consolida a terceira interface funcional do sistema.
-
-Principais recursos:
+A versão `1.0.0` consolida:
 
 - CLI funcional;
 - GUI funcional;
-- Web funcional;
-- banco SQLite compartilhado;
-- gerenciamento de alunos;
-- gerenciamento de planos;
+- aplicação Web funcional;
+- versão Web pública;
+- executável Windows;
+- banco SQLite;
+- alunos;
+- planos;
 - assinaturas;
 - pagamentos;
 - inadimplência;
@@ -1218,17 +1416,21 @@ Principais recursos:
 - Faker;
 - exportação JSON;
 - autenticação administrativa;
+- validação e máscara de CPF;
 - interface responsiva;
-- mobile `320 x 800`;
-- acesso pela rede local;
+- validação mobile `320 x 800`;
 - QR Code;
-- 35 testes automatizados aprovados.
+- 38 testes automatizados;
+- testes com usuários;
+- teste de instalação limpa;
+- versionamento semântico;
+- documentação final.
 
 ---
 
-# Papéis do projeto
+# 👨‍💻 Papéis do projeto
 
-Durante o desenvolvimento são considerados:
+Durante o desenvolvimento foram considerados:
 
 ```text
 PO - Product Owner
@@ -1238,7 +1440,7 @@ Tech Lead / Desenvolvedor
 IA - Inteligência Artificial
 ```
 
-## Product Owner
+## 📌 Product Owner
 
 Responsável por:
 
@@ -1248,7 +1450,7 @@ Responsável por:
 - priorização;
 - organização das versões.
 
-## QA
+## 🧪 QA
 
 Responsável por:
 
@@ -1257,9 +1459,10 @@ Responsável por:
 - validação de regras;
 - identificação de erros;
 - testes de regressão;
-- validação das interfaces.
+- validação das interfaces;
+- testes com usuários.
 
-## UX
+## 🎨 UX
 
 Responsável por:
 
@@ -1268,24 +1471,27 @@ Responsável por:
 - formulários;
 - mensagens;
 - responsividade;
-- experiência de uso.
+- experiência de uso;
+- avaliação de feedback dos usuários.
 
-## Tech Lead / Desenvolvedor
+## 💻 Tech Lead / Desenvolvedor
 
 Responsável por:
 
 - arquitetura;
-- models;
-- services;
+- Models;
+- Services;
 - banco;
 - interfaces;
 - integração;
 - versionamento;
-- desenvolvimento.
+- desenvolvimento;
+- deploy;
+- empacotamento.
 
-## Inteligência Artificial
+## 🤖 Inteligência Artificial
 
-Utilizada como ferramenta de apoio para:
+Foi utilizada como ferramenta de apoio para:
 
 - planejamento;
 - arquitetura;
@@ -1293,69 +1499,54 @@ Utilizada como ferramenta de apoio para:
 - revisão;
 - testes;
 - documentação;
-- explicação de conceitos.
+- explicação de conceitos;
+- investigação de erros;
+- refinamento de requisitos.
 
-As decisões e validações finais permanecem sob responsabilidade do desenvolvedor.
+As decisões, implementações e validações finais permanecem sob responsabilidade do desenvolvedor.
 
 ---
 
-# Documentação
+# 📚 Documentação
 
 Arquivos complementares:
 
 ```text
 docs/
 ├── requisitos.md
-└── papeis_projeto.md
+├── papeis_projeto.md
+└── testes_usuarios.md
 ```
 
 ---
 
-# Executável
+# 🐙 Repositório
 
-Está prevista a criação de uma versão executável utilizando **PyInstaller**.
-
-Objetivo:
+O código-fonte do projeto está disponível no GitHub:
 
 ```text
-SmartFitGymManager.exe
+https://github.com/nathandiasc/projeto_cdt
 ```
 
-O executável deverá abrir a interface gráfica sem exigir comandos no terminal.
-
----
-
-# Publicação Web
-
-A próxima etapa é disponibilizar a aplicação em um ambiente Web.
-
-A opção planejada é:
+O projeto está localizado dentro da pasta:
 
 ```text
-Render
-```
-
-Fluxo esperado:
-
-```text
-GitHub
-   ↓
-Render
-   ↓
-URL pública
-   ↓
-Aplicação Flask
-   ↓
-QR Code
-   ↓
-Celular
+smartfit-gym-manager/
 ```
 
 ---
 
-# Roadmap
+# 🌐 Aplicação online
 
-## Concluído
+```text
+https://smartfit-gym-manager.onrender.com
+```
+
+---
+
+# 🗺️ Roadmap
+
+## ✅ Concluído
 
 - [x] Estrutura modular
 - [x] SQLite
@@ -1376,7 +1567,6 @@ Celular
 - [x] Relatórios
 - [x] Exportação JSON
 - [x] Autenticação
-- [x] Testes automatizados
 - [x] Flask
 - [x] Dashboard Web
 - [x] Alunos Web
@@ -1390,72 +1580,63 @@ Celular
 - [x] Validação `320 x 800`
 - [x] Acesso pelo celular
 - [x] QR Code
-- [x] Testes Web
-- [x] 35 testes aprovados
-- [x] Versão `0.6.0`
-
-## Próximas etapas
-
-- [ ] Executável com PyInstaller
-- [ ] Publicação Web
-- [ ] Testes com outros usuários
-- [ ] Teste completo após `git clone`
-- [ ] Revisão final do GitHub
-- [ ] Revisão da documentação
-- [ ] Preparação do pitch
-- [ ] Versão estável `1.0.0`
+- [x] PyInstaller
+- [x] Executável local
+- [x] Render
+- [x] Publicação Web
+- [x] Validação de CPF
+- [x] Testes com usuários
+- [x] Teste após `git clone`
+- [x] 38 testes aprovados
+- [x] Documentação final
+- [x] Versão estável `1.0.0`
 
 ---
 
-# Status do projeto
+# 📌 Status do projeto
 
 | Componente | Status |
 |---|---|
-| Arquitetura | Concluído |
+| Arquitetura | Concluída |
 | SQLite | Concluído |
-| Services | Concluído |
+| Services | Concluídos |
 | CLI | Concluída |
 | GUI | Concluída |
 | Web | Concluída |
 | Flask | Concluído |
 | JSON | Concluído |
 | Faker | Concluído |
-| Relatórios | Concluído |
+| Relatórios | Concluídos |
 | Autenticação | Concluída |
+| Validação de CPF | Concluída |
 | Mobile 320 x 800 | Concluído |
 | QR Code | Concluído |
-| Testes automatizados | 35 aprovados |
-| Executável | Não iniciado |
-| Deploy | Não iniciado |
-| Teste com usuários | Pendente |
-| Versão atual | `0.6.0` |
-| Versão estável | Não concluída |
+| Testes automatizados | 38 aprovados |
+| Executável | Concluído |
+| Deploy | Concluído |
+| Render | Live |
+| Testes com usuários | Concluídos |
+| Clone limpo | Validado |
+| Versão atual | `1.0.0` |
+| Versão estável | Concluída |
 
 ---
 
-# Próximas etapas
+# ⚠️ Limitações
 
-Com a aplicação Web concluída, os próximos objetivos são:
+Por se tratar de um projeto acadêmico:
 
-```text
-PyInstaller
-    ↓
-Executável local
-    ↓
-Deploy Web
-    ↓
-Teste com outras pessoas
-    ↓
-Teste após git clone
-    ↓
-Revisão final
-    ↓
-1.0.0
-```
+- as credenciais administrativas são fixas;
+- o banco principal é SQLite;
+- o armazenamento da versão gratuita publicada no Render não deve ser considerado persistente para produção;
+- o executável Windows não possui assinatura digital;
+- a validação do CPF verifica estrutura e quantidade de dígitos, mas não calcula os dígitos verificadores oficiais.
+
+Esses pontos podem ser evoluídos em versões futuras.
 
 ---
 
-# Licença
+# 📄 Licença
 
 As condições de utilização estão disponíveis em:
 
@@ -1465,6 +1646,6 @@ LICENSE
 
 ---
 
-# Autor
+# 👨‍💻 Autor
 
 Projeto desenvolvido como trabalho final de programação.
