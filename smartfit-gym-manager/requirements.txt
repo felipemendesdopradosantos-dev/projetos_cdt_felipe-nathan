@@ -3,3 +3,4 @@ Faker
 qrcode[pil]
 pytest
 pyinstaller
+gunicorn
